@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="25005" started-at="2017-06-28T21:09:25Z" finished-at="2017-06-28T21:09:50Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="25005" started-at="2017-06-28T21:09:25Z" finished-at="2017-06-28T21:09:50Z">
+      <class name="tests.CreateSegmentPractice">
+        <test-method status="PASS" signature="setUp()[pri:0, instance:tests.CreateSegmentPractice@14bf9759]" name="setUp" is-config="true" duration-ms="22517" started-at="2017-06-28T14:09:25Z" finished-at="2017-06-28T14:09:48Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method status="PASS" signature="CampaignGroupTest()[pri:0, instance:tests.CreateSegmentPractice@14bf9759]" name="CampaignGroupTest" duration-ms="2479" started-at="2017-06-28T14:09:48Z" finished-at="2017-06-28T14:09:50Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- CampaignGroupTest -->
+      </class> <!-- tests.CreateSegmentPractice -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
