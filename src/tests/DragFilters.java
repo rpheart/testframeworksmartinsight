@@ -28,9 +28,9 @@ public class DragFilters extends Base {
 	public void dragTest(){
 		Actions actions = new Actions(driver);
 		Refine dragger = PageFactory.initElements(driver, Refine.class);
-		isDisplayed(dragger.getFilter(), 5);
-		actions.clickAndHold(dragger.getFilter());
-		actions.dragAndDrop(dragger.getFilter(), dragger.getPurchaseFilterGroup()).perform(); 
+		isDisplayed(dragger.ageRange(), 5);
+		actions.clickAndHold(dragger.ageRange());
+		actions.dragAndDrop(dragger.ageRange(), dragger.getPurchaseFilterGroup()).perform(); 
 	}
 	
 }

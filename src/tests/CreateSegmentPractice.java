@@ -1,8 +1,6 @@
 package tests;
 
 
-import java.util.List;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -41,6 +39,7 @@ public class CreateSegmentPractice extends Base{
 		Assert.assertTrue(groupType.contains("Campaigns: "), "Group position 2 not matched");
 		groupType = refine.getGroupType(3);
 		Assert.assertTrue(groupType.contains("Campaigns: "));
+		
 	}
 	
 	

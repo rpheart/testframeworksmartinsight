@@ -36,7 +36,7 @@ public class Refine extends Base {
 				addedGroup = driver.findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + i + "]/div[2]/div[1]/div/div/div[3]"));
 				if(addedGroup != null){
 					addedGroups.add(addedGroup);
-					System.out.println("Group xpaths found: " + addedGroup );
+					
 				}
 				else {
 					break;
@@ -59,14 +59,12 @@ public class Refine extends Base {
 	}
 	
 	
-	
 	public void addPurchaseGroup() {
 		isDisplayedBy(AddGroup, 5);
 		click(AddGroup);
 		isDisplayedBy(AddPurchaseGroup, 5);
 		click(AddPurchaseGroup);
 	}
-	
 	
 	
 	public void addCampaignGroup() {
@@ -76,18 +74,48 @@ public class Refine extends Base {
 		click(AddCampaignGroup);
 	}
 
+	public void addPeopleGroup() {
+		isDisplayedBy(AddGroup, 5);
+		click(AddGroup);
+		isDisplayedBy(AddPeopleGroup, 5);
+		click(AddPeopleGroup);
+	}
 
 
 	//FILTERS
-	@FindBy(xpath="//*[@id='refine']/div/div/div/div[2]/div[1]/div/div[5]/ul/li[17]/div")
-	private WebElement filterAgeRange;
 	
 	
+	@FindBy(xpath="//*[@id='refine']/div/div/div/div[2]/div[1]/div/div[5]/ul/[text()[contains(., 'Age Range')]]")
+	private WebElement ageRange;
 	
 	
-	public WebElement getFilter() {
-		return filterAgeRange; 
+	public WebElement ageRange() {
+		return  ageRange; 
 	}
+	
+	
+/*	public String getFilter(String name){
+		
+		
+		String type=null;
+		if (position > addedGroups.size()){
+			return null;
+		}
+		WebElement group = addedGroups.get(position -1 );
+		type = group.getText();
+		return type;
+	}
+	*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
