@@ -1,4 +1,4 @@
-package pageObjects;
+package com.smartfocus.test.ui.page_objects;
 
 //import java.util.concurrent.TimeUnit;
 //import org.openqa.selenium.WebDriver;

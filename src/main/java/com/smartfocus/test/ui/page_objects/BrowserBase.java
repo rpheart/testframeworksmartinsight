@@ -1,4 +1,4 @@
-package pageObjects;
+package com.smartfocus.test.ui.page_objects;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

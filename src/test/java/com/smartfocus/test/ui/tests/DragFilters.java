@@ -1,15 +1,10 @@
-package tests;
+package com.smartfocus.test.ui.tests;
 
+import com.smartfocus.test.ui.page_objects.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import pageObjects.Base;
-import pageObjects.BrowserBase;
-import pageObjects.Login_sidevall;
-import pageObjects.NewSegment;
-import pageObjects.Refine;
 
 public class DragFilters extends Base {
 

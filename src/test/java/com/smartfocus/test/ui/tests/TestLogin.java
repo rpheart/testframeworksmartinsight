@@ -1,14 +1,13 @@
-package tests;
+package com.smartfocus.test.ui.tests;
 
 
+import com.smartfocus.test.ui.page_objects.Base;
+import com.smartfocus.test.ui.page_objects.BrowserBase;
+import com.smartfocus.test.ui.page_objects.Login_sidevall;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import pageObjects.Base;
-import pageObjects.BrowserBase;
-import pageObjects.Login_sidevall;
 
 public class TestLogin extends Base {
 	

@@ -1,15 +1,11 @@
-package tests;
+package com.smartfocus.test.ui.tests;
 
+import com.smartfocus.test.ui.page_objects.*;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import pageObjects.Base;
-import pageObjects.BrowserBase;
-import pageObjects.Login_sidevall;
-import pageObjects.NewSegment;
-import pageObjects.SegmentNameText;
 
 public class TestCreateNewCustom extends Base {
 

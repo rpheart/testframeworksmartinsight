@@ -1,15 +1,12 @@
-package tests;
+package com.smartfocus.test.ui.tests;
 
+import com.smartfocus.test.ui.page_objects.Base;
 import org.openqa.selenium.By;
-
 import org.openqa.selenium.WebElement;
-
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import pageObjects.Base;
 
 public class TestNewLogin extends Base{
 
