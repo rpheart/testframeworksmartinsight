@@ -12,6 +12,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <core-version>1.0.0</core-version>
     <selenium.version>2.53.0</selenium.version>
+    <httpcore.version>4.4.6</httpcore.version>
+    <httpclient.version>4.5.3</httpclient.version>
   </properties>
   
   <dependencies>
@@ -46,6 +48,21 @@
        <version>${selenium.version}</version>
        <scope>compile</scope>
     </dependency>
+    <dependency>
+		<groupId>org.seleniumhq.selenium</groupId>
+		<artifactId>selenium-chrome-driver</artifactId>
+		<version>${selenium.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>${httpcore.version}</version>
+    </dependency>
+    <dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	    <version>${httpclient.version}</version>
+	</dependency>
   </dependencies>
 
   <repositories>
