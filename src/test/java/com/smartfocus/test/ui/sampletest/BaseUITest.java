@@ -1,4 +1,4 @@
-package com.smartfocus.test.ui;
+package com.smartfocus.test.ui.sampletest;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;

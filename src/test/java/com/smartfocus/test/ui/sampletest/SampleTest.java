@@ -1,7 +1,6 @@
 package com.smartfocus.test.ui.sampletest;
 
 import com.smartfocus.test.Assert;
-import com.smartfocus.test.ui.BaseUITest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
