@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 import java.util.List;
 
 public class Base {
@@ -43,9 +44,18 @@ public class Base {
         wait.until(condition);
     }
 
-    public Boolean isDisplayed (WebElement locator, int maxWaitTime){
+/*    public Boolean isDisplayed (WebElement locator, int maxWaitTime){
         try {
             waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return false;
+        }
+        return true;
+    }*/
+
+    public Boolean isDisplayed(WebElement locator, int maxWaitTime) {
+        try {
+           waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
         } catch (org.openqa.selenium.TimeoutException exception) {
             return false;
         }
@@ -62,6 +72,8 @@ public class Base {
     }
 
     public static void tearDown() {
+
+        driver.close();
         driver.quit();
     }
 

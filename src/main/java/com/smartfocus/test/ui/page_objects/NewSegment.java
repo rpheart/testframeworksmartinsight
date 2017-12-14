@@ -12,6 +12,7 @@ public class NewSegment extends Base {
 
 
     public void analyze(){
+
         click(analyze);
     }
 

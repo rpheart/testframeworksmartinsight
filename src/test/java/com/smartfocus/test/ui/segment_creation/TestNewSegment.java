@@ -15,15 +15,15 @@ public class TestNewSegment extends Base {
         login.loginSidevall();
         NewSegment custom = new NewSegment();
         custom.newCustom();
+        RefineGlobal filter = new RefineGlobal();
     }
 
 
     @Test(priority = 0)
-    public void CampaignGroupTest (){
-        RefineSegment refine = new RefineSegment();
+    public void campaignGroupTest (){
+        RefineGlobal refine = new RefineGlobal();
         refine.addCampaignGroup();
-        refine.addCampaignGroup();
-        refine = PageFactory.initElements(driver, RefineSegment.class);
+        refine = PageFactory.initElements(driver, RefineGlobal.class);
         refine.findAddedGroups();
         String groupType = refine.getGroupType(2);
         Assert.assertTrue(groupType.contains("Campaigns: "), "Group position 2 not matched");
