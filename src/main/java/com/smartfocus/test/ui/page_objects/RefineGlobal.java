@@ -40,23 +40,26 @@ public class RefineGlobal extends Base {
     }
 
     public WebElement getGroup(int position) {
+        return getGroup(position, false);
+    }
+
+    public WebElement getGroup(int position, boolean refresh) {
+        if ( refresh ) {
+            findAddedGroups();
+        }
+        if ( position > groups.size() ) {
+            throw new AssertionError("Invalid index. max indice is " + groups.size());
+        }
         return groups.get(position - 1);
     }
 
-    //ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS
-
-    public WebElement addPurchaseGroup() {
-        isDisplayedBy(AddGroup, 5);
-        click(AddGroup);
-        isDisplayedBy(AddPurchaseGroup, 5);
-        click(AddPurchaseGroup);
-        int lastGroup = groups.size();
-        WebElement fg = findFilterGroup(lastGroup + 1);
-        isDisplayed(fg, 5);
-        return fg;
+    public int findAddedGroups() {
+        groups = null;
+        groups = driver.findElements(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[*]/div[2]/div[1]/div/div/div[3]"));
+        return groups.size();
     }
 
-    public void addDefaultPurchaseGroup() {
+    public void findGroup() {
         WebElement addedGroup = null;
         int i = 1;
         while (i < 100) {
@@ -77,13 +80,41 @@ public class RefineGlobal extends Base {
         isDisplayed(fg, 5);
     }
 
-
-//THIS IS FOR GETTING THE GROUP NAME BACK FROM THOSE THAT WERE ADDED
-    public List<WebElement> getAddedGroups() {
-        return addedGroups;
+    public String getGroupType(int position) {
+        String type = null;
+        if ( position > groups.size() ) {
+            return null;
+        }
+        WebElement group = groups.get(position - 1);
+        type = group.getText();
+        return type;
     }
 
-    private List<WebElement> addedGroups;
+
+
+    //ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS
+
+/*
+    public WebElement findGroup(int position) {
+
+    }
+*/
+
+    public WebElement addPurchaseGroup() {
+        isDisplayedBy(AddGroup, 5);
+        click(AddGroup);
+        isDisplayedBy(AddPurchaseGroup, 5);
+        click(AddPurchaseGroup);
+        int lastGroup = groups.size();
+        WebElement fg = findFilterGroup(lastGroup + 1);
+        isDisplayed(fg, 5);
+        return fg;
+    }
+
+
+
+//THIS IS FOR GETTING THE GROUP NAME BACK FROM THOSE THAT WERE ADDED
+/*
 
     public void findAddedGroups() {
         WebElement addedGroup = null;
@@ -104,17 +135,8 @@ public class RefineGlobal extends Base {
             i++;
         }
     }
+*/
 
-
-    public String getGroupType(int position) {
-        String type = null;
-        if ( position > addedGroups.size() ) {
-            return null;
-        }
-        WebElement group = addedGroups.get(position - 1);
-        type = group.getText();
-        return type;
-    }
 
 
 //ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS

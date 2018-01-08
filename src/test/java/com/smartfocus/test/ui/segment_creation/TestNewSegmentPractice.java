@@ -49,8 +49,10 @@ public class TestNewSegmentPractice extends Base {
         editDescription.newDescription("New description of segment");
 
         //ADD FILTER GROUPS AND FILTERS
-        RG.addDefaultPurchaseGroup();
+        RG.getGroup(1, true);
         RG.addPurchaseGroup();
+        RG.findAddedGroups()
+        RG.findAddedGroups();
 
         UtilityDragger.drag(RG.ageRange(), RG.getGroup(1));
         for (WebElement checkBox : lovFilter.genericLOV("18-20", "21-24")) {
