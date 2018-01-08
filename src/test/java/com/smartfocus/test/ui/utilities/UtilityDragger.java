@@ -6,10 +6,9 @@ import org.openqa.selenium.support.PageFactory;
 
 import org.openqa.selenium.WebElement;
 
+import java.security.acl.Group;
+
 public class UtilityDragger extends Base{
-
-    //ONLY IN DEVELOPMENT AT THIS TIME - ONLY IN DEVELOPMENT AT THIS TIME - ONLY IN DEVELOPMENT AT THIS TIME - ONLY IN DEVELOPMENT AT THIS TIME -
-
 
 
     public static void drag(WebElement filter, WebElement group) {

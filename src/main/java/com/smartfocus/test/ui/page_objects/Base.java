@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+//import org.openqa.selenium.support.ui.ExpectedCondition<org.openqa.selenium.WebElement>;
 
 
 import java.util.List;
@@ -38,20 +39,19 @@ public class Base {
         find(locator).click();
     }
 
+
     private void waitFor (ExpectedCondition<WebElement> condition, Integer timeout) {
         timeout = timeout != null ? timeout : 10;
         WebDriverWait wait = new WebDriverWait(driver, timeout);
         wait.until(condition);
     }
 
-/*    public Boolean isDisplayed (WebElement locator, int maxWaitTime){
-        try {
-            waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
-        } catch (org.openqa.selenium.TimeoutException exception) {
-            return false;
-        }
-        return true;
-    }*/
+    private void waitUntil (ExpectedCondition<Boolean> condition, Integer timeout) {
+        timeout = timeout != null ? timeout : 10;
+        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        wait.until(condition);
+    }
+
 
     public Boolean isDisplayed(WebElement locator, int maxWaitTime) {
         try {
@@ -65,6 +65,15 @@ public class Base {
     public Boolean isDisplayedBy (By locator, int maxWaitTime){
         try {
             waitFor(ExpectedConditions.visibilityOfElementLocated(locator), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean isNotDisplayedBy (By locator, int maxWaitTime) {
+        try {
+            waitUntil(ExpectedConditions.invisibilityOfElementLocated(locator), maxWaitTime);
         } catch (org.openqa.selenium.TimeoutException exception) {
             return false;
         }
