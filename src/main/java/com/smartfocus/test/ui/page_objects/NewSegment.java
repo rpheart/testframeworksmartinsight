@@ -1,6 +1,8 @@
 package com.smartfocus.test.ui.page_objects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.PageFactory;
+
 
 public class NewSegment extends Base {
 
@@ -10,6 +12,7 @@ public class NewSegment extends Base {
     By createTimeline = By.className("timelineSegmentLine");
     By createAffinity = By.className("affinityLine");
 
+    RefineGlobal RG;
 
     public void analyze(){
 
@@ -37,21 +40,28 @@ public class NewSegment extends Base {
     }
 
     public void newCustom(){
+        RG = PageFactory.initElements(driver, RefineGlobal.class);
         analyze();
         createButton();
         createCustom();
+        RG.findAddedGroups();
     }
 
     public void newTimeline(){
+        RG = PageFactory.initElements(driver, RefineGlobal.class);
         analyze();
         createButton();
         createTimeline();
+        RG.findAddedGroups();
+
     }
 
     public void newAffinity(){
+        RG = PageFactory.initElements(driver, RefineGlobal.class);
         analyze();
         createButton();
         createAffinity();
+        RG.findAddedGroups();
     }
 
 

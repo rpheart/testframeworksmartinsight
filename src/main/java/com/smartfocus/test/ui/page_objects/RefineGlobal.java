@@ -31,9 +31,14 @@ public class RefineGlobal extends Base {
     By cloneFromDropdown = By.cssSelector(".ddm-item-text.menuCloneUpdate");
     By splitFromDropdown = By.cssSelector(".ddm-item-text.menuSplitSegment");
 
+    //Tab controls
+    By summaryTab = By.xpath("//div[@class='.tab' or @class='.tab.active']//*[contains(text(), 'Summary')]");
+    By refineTab = By.xpath("//div[@class='.tab' or @class='.tab.active']//*[contains(text(), 'Refine')]");
+    By settingsTab = By.xpath("//div[@class='.tab' or @class='.tab.active']//*[contains(text(), 'Settings')]");
+
 
     //Filter Group list element
-    List <WebElement> groups = new ArrayList<>();
+    List<WebElement> groups = new ArrayList<>();
 
     public List<WebElement> getGroups() {
         return groups;
@@ -59,26 +64,11 @@ public class RefineGlobal extends Base {
         return groups.size();
     }
 
-    public void findGroup() {
-        WebElement addedGroup = null;
-        int i = 1;
-        while (i < 100) {
-            try {
-                addedGroup = driver.findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + i
-                        + "]/div[2]/div[1]/div/div/div[3]"));
-                if ( addedGroup != null ) {
-                    groups.add(addedGroup);
-
-                } else {
-                    break;
-                }
-            } catch (NoSuchElementException e) {
-            }
-            i++;
-        }
-        WebElement fg = findFilterGroup(1);
-        isDisplayed(fg, 5);
+    public WebElement getDropZone(int position) {
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul"));
+        return dropZone;
     }
+
 
     public String getGroupType(int position) {
         String type = null;
@@ -91,14 +81,8 @@ public class RefineGlobal extends Base {
     }
 
 
-
     //ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS
 
-/*
-    public WebElement findGroup(int position) {
-
-    }
-*/
 
     public WebElement addPurchaseGroup() {
         isDisplayedBy(AddGroup, 5);
@@ -108,35 +92,9 @@ public class RefineGlobal extends Base {
         int lastGroup = groups.size();
         WebElement fg = findFilterGroup(lastGroup + 1);
         isDisplayed(fg, 5);
+        findAddedGroups();
         return fg;
     }
-
-
-
-//THIS IS FOR GETTING THE GROUP NAME BACK FROM THOSE THAT WERE ADDED
-/*
-
-    public void findAddedGroups() {
-        WebElement addedGroup = null;
-        addedGroups = new ArrayList<>();
-        int i = 1;
-        while (i < 100) {
-            try {
-                addedGroup = driver.findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + i
-                        + "]/div[2]/div[1]/div/div/div[3]"));
-                if ( addedGroup != null ) {
-                    addedGroups.add(addedGroup);
-
-                } else {
-                    break;
-                }
-            } catch (NoSuchElementException e) {
-            }
-            i++;
-        }
-    }
-*/
-
 
 
 //ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS
@@ -159,22 +117,20 @@ public class RefineGlobal extends Base {
     }
 
 
-
-
     String filterGroupPattern = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[i]/div[2]/div[1]/ul";
 
-    public WebElement  findFilterGroup(int position) {
+    public WebElement findFilterGroup(int position) {
         By location = By.xpath(filterGroupPattern.replace("[i]", String.format("%s%d%s", "[", position, "]")));
-        groups.add(position-1, findString(location));
-        return groups.get(position-1);
+        groups.add(position - 1, findString(location));
+        return groups.get(position - 1);
     }
 
     String filterGroupAndOrTopPattern = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[a]/div[2]/div[1]/ul/li/div[3]/ul[1]";
 
     public WebElement findTop(int positionA) {
         By location = By.xpath(filterGroupAndOrTopPattern.replace("[a]", String.format("%s%d%s", "[", positionA, "]")));
-        groups.add(positionA-1, findString(location));
-        return groups.get(positionA-1);
+        groups.add(positionA - 1, findString(location));
+        return groups.get(positionA - 1);
     }
 
 
@@ -182,14 +138,13 @@ public class RefineGlobal extends Base {
 
     public WebElement findBottom(int positionB) {
         By location = By.xpath(filterGroupAndOrBottomPattern.replace("[b]", String.format("%s%d%s", "[", positionB, "]")));
-        groups.add(positionB-1, findString(location));
-        return groups.get(positionB-1);
+        groups.add(positionB - 1, findString(location));
+        return groups.get(positionB - 1);
     }
 
 
     @FindBy(xpath = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div/div[2]/div[1]/ul/li/div[3]/ul[1]")
     public WebElement filterGroup1Top;
-
 
     public WebElement firstGroupTop() {
         return filterGroup1Top;
@@ -221,7 +176,12 @@ public class RefineGlobal extends Base {
     }
 
 
-//FILTERS
+    public void summaryTab() {
+        isDisplayedBy(summaryTab, 5);
+        click(summaryTab);
+    }
+
+    //FILTERS
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Age Range')]")
     public WebElement filterAgeRange;
 
@@ -229,6 +189,7 @@ public class RefineGlobal extends Base {
         isDisplayed(filterAgeRange, 5);
         return filterAgeRange;
     }
+
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'City')]")
     public WebElement filterCity;
 
@@ -249,10 +210,10 @@ public class RefineGlobal extends Base {
     public void saveSegment() {
         isDisplayedBy(saveButton, 5);
         click(saveButton);
-/*        isDisplayedBy(notCalculated, 10);
+        isDisplayedBy(notCalculated, 10);
         isDisplayedBy(updatingCount, 10);
         isNotDisplayedBy(updatingCount, 150);
-        isDisplayedBy(countComplete, 200);*/
+        isDisplayedBy(countComplete, 200);
     }
 
 
@@ -301,6 +262,30 @@ public class RefineGlobal extends Base {
         click(saveDropdownButton);
         isDisplayedBy(splitFromDropown, 5);
         click(splitFromDropown);
+    }
+*/
+
+//THIS IS FOR GETTING THE GROUP NAME BACK FROM THOSE THAT WERE ADDED
+/*
+
+    public void findAddedGroups() {
+        WebElement addedGroup = null;
+        addedGroups = new ArrayList<>();
+        int i = 1;
+        while (i < 100) {
+            try {
+                addedGroup = driver.findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + i
+                        + "]/div[2]/div[1]/div/div/div[3]"));
+                if ( addedGroup != null ) {
+                    addedGroups.add(addedGroup);
+
+                } else {
+                    break;
+                }
+            } catch (NoSuchElementException e) {
+            }
+            i++;
+        }
     }
 */
 
