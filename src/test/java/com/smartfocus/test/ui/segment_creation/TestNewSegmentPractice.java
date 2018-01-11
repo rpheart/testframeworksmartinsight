@@ -27,8 +27,11 @@ public class TestNewSegmentPractice extends Base {
     HomeNavigation navigation = new HomeNavigation();
     Analyze manager;
 
+
+
+
     @BeforeClass
-    public void setUp(){
+    public void setUp() {
 
         BrowserBase.startBrowser("chrome", "https://qa-sfui.themessagecloud.com");
         Logins login = new Logins();
@@ -39,6 +42,98 @@ public class TestNewSegmentPractice extends Base {
         manager = PageFactory.initElements(driver, Analyze.class);
     }
 
+
+    @Test
+    public void toggleTest() {
+
+        RG.settingsTab();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleLockSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleLockSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleWorkgroupSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleWorkgroupSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleAgeAndGenderSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleAgeAndGenderSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleTotalSpendSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleTotalSpendSetting();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleRFM();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.toggleRFM();
+
+
+    }
+
+
+
+/*
 
     @Test
     public void dragTest() {
@@ -52,7 +147,7 @@ public class TestNewSegmentPractice extends Base {
         //ADD FILTER GROUPS AND FILTERS
         RG.addPurchaseGroup();
 
-                //FILTERS
+        //FILTERS
         UtilityDragger.drag(RG.ageRange(), RG.getDropZone(2));
         for (WebElement checkBox : lovFilter.genericLOV("18-20", "21-24")) {
             checkBox.click();
@@ -62,7 +157,7 @@ public class TestNewSegmentPractice extends Base {
         }
         lovFilter.saveFilter();
 
-        UtilityDragger.drag(RG.totalSpend(),RG.getDropZone(2));
+        UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
         amountFilter.inBetween("4", "500");
         lovFilter.saveFilter();
 
@@ -72,14 +167,9 @@ public class TestNewSegmentPractice extends Base {
 
         RG.summaryTab();
 
-
-
-
-
         try {
-            Thread.sleep(10);
-        }
-        catch (InterruptedException exception ) {
+            Thread.sleep(8000);
+        } catch (InterruptedException exception) {
 
         }
 
@@ -87,8 +177,7 @@ public class TestNewSegmentPractice extends Base {
 
         try {
             Thread.sleep(5000);
-        }
-        catch (InterruptedException exception ) {
+        } catch (InterruptedException exception) {
         }
 
         //DELETE SEGMENT
@@ -96,10 +185,12 @@ public class TestNewSegmentPractice extends Base {
         for (WebElement checkBox : manager.segmentList("New Segment Title")) {
             checkBox.click();
         }
+
+
         manager.deleteSegment();
 
-
-
+    }
+*/
 
 
 
@@ -114,9 +205,9 @@ public class TestNewSegmentPractice extends Base {
             checkBox.click();
         }
 
-        lovFilter.saveFilter();*/
+        lovFilter.saveFilter();
     }
-
+*/
 
 
    /* @Test(priority = 0)

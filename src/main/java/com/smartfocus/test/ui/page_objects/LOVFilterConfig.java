@@ -8,8 +8,6 @@ import java.util.List;
 
 public class LOVFilterConfig extends Base {
 
-
-
     By modal = By.cssSelector(".grid-canvas");
     By saveFilterButton = By.cssSelector(".btn.saveBtn.modalFilterSave");
     By cancelFilterButton = By.cssSelector(".btn.cancelBtn.modalFilterCancel");
@@ -36,7 +34,7 @@ public class LOVFilterConfig extends Base {
         try {
             Thread.sleep(2000);
         }
-        catch (InterruptedException exceptionn ) {
+        catch (InterruptedException exception ) {
 
         }
     }

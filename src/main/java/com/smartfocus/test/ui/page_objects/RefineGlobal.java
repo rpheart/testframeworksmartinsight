@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
+
 public class RefineGlobal extends Base {
 
     // Add filter group dropdown elements
@@ -32,9 +33,23 @@ public class RefineGlobal extends Base {
     By splitFromDropdown = By.cssSelector(".ddm-item-text.menuSplitSegment");
 
     //Tab controls
-    By summaryTab = By.xpath("//div[@class='.tab' or @class='.tab.active']//*[contains(text(), 'Summary')]");
-    By refineTab = By.xpath("//div[@class='.tab' or @class='.tab.active']//*[contains(text(), 'Refine')]");
-    By settingsTab = By.xpath("//div[@class='.tab' or @class='.tab.active']//*[contains(text(), 'Settings')]");
+    By summaryTab = By.cssSelector(".mainSummaryTab");
+
+
+    By refineTab = By.xpath(".mainRefineTab");
+
+
+
+
+    By settingsTab = By.cssSelector(".mainSettingsTab");
+
+    By lockedSegmentToggle = By.xpath("//*[@class='locked-segment']/div/div");
+    By workGroupToggle = By.xpath("//*[@class='grouped-segmentation']/div/div");
+    By ageAndGenderToggle = By.xpath("//*[@class='generate-demo']/div/div");
+    By totalSpendToggle = By.xpath("//*[@class='generate-product']/div/div");
+    By rfmToggle = By.xpath("//*[@class='generate-rfm']/div/div");
+
+
 
 
     //Filter Group list element
@@ -181,6 +196,18 @@ public class RefineGlobal extends Base {
         click(summaryTab);
     }
 
+    public void refineTab() {
+        isDisplayedBy(refineTab, 5);
+        click(refineTab);
+    }
+
+    public void settingsTab() {
+        isDisplayedBy(settingsTab, 5);
+        click(settingsTab);
+    }
+
+
+
     //FILTERS
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Age Range')]")
     public WebElement filterAgeRange;
@@ -207,6 +234,42 @@ public class RefineGlobal extends Base {
     }
 
 
+    //SETTINGS TOGGLES, SETTINGS TOGGLES,SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES,
+
+
+
+    public void toggleLockSetting() {
+        isDisplayedBy(lockedSegmentToggle, 5);
+        click(lockedSegmentToggle);
+    }
+
+    public void toggleWorkgroupSetting() {
+        isDisplayedBy(workGroupToggle, 5);
+        click(workGroupToggle);
+    }
+
+    public void toggleAgeAndGenderSetting() {
+        isDisplayedBy(ageAndGenderToggle, 5);
+        click(ageAndGenderToggle);
+    }
+
+    public void toggleTotalSpendSetting() {
+        isDisplayedBy(totalSpendToggle,5);
+        click(totalSpendToggle);
+    }
+
+    public void toggleRFM() {
+        isDisplayedBy(rfmToggle, 5);
+        click(rfmToggle);
+    }
+
+
+
+
+
+
+
+
     public void saveSegment() {
         isDisplayedBy(saveButton, 5);
         click(saveButton);
@@ -215,6 +278,7 @@ public class RefineGlobal extends Base {
         isNotDisplayedBy(updatingCount, 150);
         isDisplayedBy(countComplete, 200);
     }
+
 
 
     public void addCampaignGroup() {
