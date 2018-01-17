@@ -43,6 +43,113 @@ public class TestNewSegmentPractice extends Base {
     }
 
 
+
+
+
+
+
+    @Test
+    public void dragTest() {
+
+        //CHANGE TITLE AND DESCRIPTION
+        RG.openTitle();
+        editTitle.newTitle("New Segment Title");
+        RG.openDescription();
+        editDescription.newDescription("New description of segment");
+
+        //ADD FILTER GROUPS AND FILTERS
+        RG.addPurchaseGroup();
+
+        //FILTERS
+        UtilityDragger.drag(RG.ageRange(), RG.getDropZone(2));
+        for (WebElement checkBox : lovFilter.genericLOV("18-20", "21-24")) {
+            checkBox.click();
+        }
+        for (WebElement checkBox : lovFilter.genericLOV("18-20")) {
+            checkBox.click();
+        }
+        lovFilter.saveFilter();
+
+        UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
+        amountFilter.inBetween("4", "500");
+        lovFilter.saveFilter();
+
+        //TURN ON TOGGLE
+
+        RG.settingsTab();
+
+        RG.toggleRFM();
+
+
+        //SAVE SEGMENT
+
+        RG.saveSegment();
+
+        RG.summaryTab();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.ageAndGenderCalcTab();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+
+        RG.totalSpendCalcTab();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.segmentRFMCalctab();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.summaryCalcTab();
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException exception) {
+
+        }
+        navigation.analyze();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+        }
+
+        //DELETE SEGMENT
+
+        for (WebElement checkBox : manager.segmentList("New Segment Title")) {
+            checkBox.click();
+        }
+
+
+        manager.deleteSegment();
+
+    }
+
+
+
+
+
+
+/*
+
     @Test
     public void toggleTest() {
 
@@ -128,102 +235,11 @@ public class TestNewSegmentPractice extends Base {
 
         RG.toggleRFM();
 
-
     }
 
-
-
-/*
-
-    @Test
-    public void dragTest() {
-
-        //CHANGE TITLE AND DESCRIPTION
-        RG.openTitle();
-        editTitle.newTitle("New Segment Title");
-        RG.openDescription();
-        editDescription.newDescription("New description of segment");
-
-        //ADD FILTER GROUPS AND FILTERS
-        RG.addPurchaseGroup();
-
-        //FILTERS
-        UtilityDragger.drag(RG.ageRange(), RG.getDropZone(2));
-        for (WebElement checkBox : lovFilter.genericLOV("18-20", "21-24")) {
-            checkBox.click();
-        }
-        for (WebElement checkBox : lovFilter.genericLOV("18-20")) {
-            checkBox.click();
-        }
-        lovFilter.saveFilter();
-
-        UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
-        amountFilter.inBetween("4", "500");
-        lovFilter.saveFilter();
-
-        //SAVE SEGMENT
-
-        RG.saveSegment();
-
-        RG.summaryTab();
-
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException exception) {
-
-        }
-
-        navigation.analyze();
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException exception) {
-        }
-
-        //DELETE SEGMENT
-
-        for (WebElement checkBox : manager.segmentList("New Segment Title")) {
-            checkBox.click();
-        }
-
-
-        manager.deleteSegment();
-
-    }
 */
 
 
-
-
-/*        RG.findFilterGroup(1);
-        RG.addPurchaseGroup();
-        UtilityDragger.drag(RG.ageRange(), RG.getGroup(2));
-        for (WebElement checkBox : lovFilter.genericLOV("18-20", "21-24")) {
-            checkBox.click();
-        }
-        for (WebElement checkBox : lovFilter.genericLOV("18-20")) {
-            checkBox.click();
-        }
-
-        lovFilter.saveFilter();
-    }
-*/
-
-
-   /* @Test(priority = 0)
-    public void campaignGroupTest (){
-        RefineGlobal refine = new RefineGlobal();
-        refine.addCampaignGroup();
-        refine = PageFactory.initElements(driver, RefineGlobal.class);
-        refine.findAddedGroups();
-        String groupType = refine.getGroupType(2);
-        Assert.assertTrue(groupType.contains("Campaigns: "), "Group position 2 not matched");
-        groupType = refine.getGroupType(3);
-        Assert.assertTrue(groupType.contains("Campaigns: "));
-
-    }*/
-
-//
 /*
 	@AfterClass
 	public void end(){

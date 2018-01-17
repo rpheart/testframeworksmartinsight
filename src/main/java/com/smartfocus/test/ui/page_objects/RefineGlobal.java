@@ -1,5 +1,6 @@
 package com.smartfocus.test.ui.page_objects;
 
+import com.sun.javafx.css.CalculatedValue;
 import com.sun.org.apache.xpath.internal.res.XPATHErrorResources;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -32,16 +33,18 @@ public class RefineGlobal extends Base {
     By cloneFromDropdown = By.cssSelector(".ddm-item-text.menuCloneUpdate");
     By splitFromDropdown = By.cssSelector(".ddm-item-text.menuSplitSegment");
 
-    //Tab controls
+    //SEGMENT CONFIGURATION TAB CONTROLS
     By summaryTab = By.cssSelector(".mainSummaryTab");
-
-
     By refineTab = By.xpath(".mainRefineTab");
-
-
-
-
     By settingsTab = By.cssSelector(".mainSettingsTab");
+
+    //SUMMARY CALCULATION TAB CONTROLS
+    By summaryCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Summary')]");
+    By ageAndGenderCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Age & Gender')]");
+    By totalSpendCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Total Spend by Product')]");
+    By rfmCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Segment RFM')]");
+
+    //SETTINGS TOGGLE CONTROLS
 
     By lockedSegmentToggle = By.xpath("//*[@class='locked-segment']/div/div");
     By workGroupToggle = By.xpath("//*[@class='grouped-segmentation']/div/div");
@@ -207,6 +210,26 @@ public class RefineGlobal extends Base {
     }
 
 
+    public void summaryCalcTab() {
+        isDisplayedBy(summaryCalculationsTab,5);
+        click(summaryCalculationsTab);
+    }
+
+    public void ageAndGenderCalcTab() {
+        isDisplayedBy(ageAndGenderCalculationsTab, 5);
+        click(ageAndGenderCalculationsTab);
+    }
+
+    public void totalSpendCalcTab() {
+        isDisplayedBy(totalSpendCalculationsTab, 5);
+        click(totalSpendCalculationsTab);
+    }
+
+    public void segmentRFMCalctab() {
+        isDisplayedBy(rfmCalculationsTab, 5);
+        click(rfmCalculationsTab);
+    }
+
 
     //FILTERS
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Age Range')]")
@@ -250,6 +273,9 @@ public class RefineGlobal extends Base {
 
     public void toggleAgeAndGenderSetting() {
         isDisplayedBy(ageAndGenderToggle, 5);
+
+
+
         click(ageAndGenderToggle);
     }
 
