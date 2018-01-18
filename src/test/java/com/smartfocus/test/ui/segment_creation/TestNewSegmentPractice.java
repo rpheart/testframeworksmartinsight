@@ -1,19 +1,12 @@
 package com.smartfocus.test.ui.segment_creation;
 
-import com.smartfocus.test.Assert;
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.utilities.UtilityDragger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import com.smartfocus.test.ui.page_objects.RefineGlobal;
-
-import javax.rmi.CORBA.Util;
 
 import static org.testng.Assert.assertTrue;
 
@@ -26,8 +19,7 @@ public class TestNewSegmentPractice extends Base {
     SegmentDescription editDescription = new SegmentDescription();
     HomeNavigation navigation = new HomeNavigation();
     Analyze manager;
-
-
+    SegmentChartViews segmentCharts;
 
 
     @BeforeClass
@@ -40,12 +32,8 @@ public class TestNewSegmentPractice extends Base {
         custom.newCustom();
         RG = PageFactory.initElements(driver, RefineGlobal.class);
         manager = PageFactory.initElements(driver, Analyze.class);
+        segmentCharts = PageFactory.initElements(driver, SegmentChartViews.class);
     }
-
-
-
-
-
 
 
     @Test
@@ -78,12 +66,15 @@ public class TestNewSegmentPractice extends Base {
 
         RG.settingsTab();
 
+        RG.toggleAgeAndGenderSetting();
         RG.toggleRFM();
 
 
         //SAVE SEGMENT
-
         RG.saveSegment();
+
+
+        //VERIFY SEGMENT RENDERS
 
         RG.summaryTab();
 
@@ -93,7 +84,33 @@ public class TestNewSegmentPractice extends Base {
 
         }
 
-        RG.ageAndGenderCalcTab();
+        RG.totalSpendChartView();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        segmentCharts.deptView();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        for (WebElement dataBar : segmentCharts.genericDataBar("1")) {
+            dataBar.click();
+        }
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        segmentCharts.categoryView();
 
         try {
             Thread.sleep(3000);
@@ -102,37 +119,44 @@ public class TestNewSegmentPractice extends Base {
         }
 
 
-        RG.totalSpendCalcTab();
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException exception) {
-
-        }
-
-        RG.segmentRFMCalctab();
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException exception) {
-
-        }
-
-        RG.summaryCalcTab();
+        RG.segmentRFMChartView();
 
         try {
             Thread.sleep(4000);
         } catch (InterruptedException exception) {
 
         }
-        navigation.analyze();
+
+        for (WebElement scorecard : segmentCharts.genericScorecard( "2", "3")) {
+            scorecard.click();
+        }
 
         try {
             Thread.sleep(3000);
         } catch (InterruptedException exception) {
+
         }
 
-        //DELETE SEGMENT
+        segmentCharts.rfmExplore();
+
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        RG.saveExistingSegment();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+
+        navigation.analyze();
+
 
         for (WebElement checkBox : manager.segmentList("New Segment Title")) {
             checkBox.click();
