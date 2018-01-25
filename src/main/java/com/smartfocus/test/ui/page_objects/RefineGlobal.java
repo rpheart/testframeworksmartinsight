@@ -1,24 +1,20 @@
 package com.smartfocus.test.ui.page_objects;
 
-import com.sun.javafx.css.CalculatedValue;
-import com.sun.org.apache.xpath.internal.res.XPATHErrorResources;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 
 
 public class RefineGlobal extends Base {
 
     // Add filter group dropdown elements
-    By AddGroup = By.cssSelector(".create-time-period-text");
-    By AddPurchaseGroup = By.cssSelector("#create_grouping_SalesTransaction");
-    By AddCampaignGroup = By.cssSelector("#create_grouping_CampaignTransaction");
-    By AddPeopleGroup = By.cssSelector("#create_grouping_Customer");
+    By addGroup = By.cssSelector(".create-time-period-text");
+    By addPurchaseGroup = By.cssSelector("#create_grouping_SalesTransaction");
+    By addCampaignGroup = By.cssSelector("#create_grouping_CampaignTransaction");
+    By addPeopleGroup = By.cssSelector("#create_grouping_Customer");
     By editTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
     By editDescription = By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable");
 
@@ -56,7 +52,6 @@ public class RefineGlobal extends Base {
 
 
 
-
     //Filter Group list element
     List<WebElement> groups = new ArrayList<>();
 
@@ -84,12 +79,6 @@ public class RefineGlobal extends Base {
         return groups.size();
     }
 
-    public WebElement getDropZone(int position) {
-        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul"));
-        return dropZone;
-    }
-
-
     public String getGroupType(int position) {
         String type = null;
         if ( position > groups.size() ) {
@@ -100,21 +89,64 @@ public class RefineGlobal extends Base {
         return type;
     }
 
+    //WHERE TO DROP THAT FILTER? GETDROPZONE IS DEFAULT, BUT ALSO INCLUDED HERE IS TOP/BOTTOM AND SPEND ON
+    public WebElement getDropZone(int position) {
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul"));
+        return dropZone;
+    }
+
+    public WebElement getTopDropZone(int position) {
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/ul[1]"));
+        return dropZone;
+    }
+
+    public WebElement getBottomDropZone(int position) {
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/ul[2]"));
+        return dropZone;
+    }
+
+  //  public WebElement getSpendOnDropZone()
+
 
     //ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS
 
 
     public WebElement addPurchaseGroup() {
-        isDisplayedBy(AddGroup, 5);
-        click(AddGroup);
-        isDisplayedBy(AddPurchaseGroup, 5);
-        click(AddPurchaseGroup);
+        isDisplayedBy(addGroup, 5);
+        click(addGroup);
+        isDisplayedBy(addPurchaseGroup, 5);
+        click(addPurchaseGroup);
         int lastGroup = groups.size();
         WebElement fg = findFilterGroup(lastGroup + 1);
         isDisplayed(fg, 5);
         findAddedGroups();
         return fg;
     }
+
+    public WebElement addCampaignGroup() {
+        isDisplayedBy(addGroup, 5);
+        click(addGroup);
+        isDisplayedBy(addCampaignGroup, 5);
+        click(addCampaignGroup);
+        int lastGroup = groups.size();
+        WebElement fg = findFilterGroup(lastGroup + 1);
+        isDisplayed(fg, 5);
+        findAddedGroups();
+        return fg;
+    }
+
+    public WebElement addPeopleGroup() {
+        isDisplayedBy(addGroup, 5);
+        click(addGroup);
+        isDisplayedBy(addPeopleGroup, 5);
+        click(addPeopleGroup);
+        int lastGroup = groups.size();
+        WebElement fg = findFilterGroup(lastGroup + 1);
+        isDisplayed(fg, 5);
+        findAddedGroups();
+        return fg;
+    }
+
 
 
 //ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS
@@ -153,7 +185,6 @@ public class RefineGlobal extends Base {
         return groups.get(positionA - 1);
     }
 
-
     String filterGroupAndOrBottomPattern = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[b]/div[2]/div[1]/ul/li/div[3]/ul[2]";
 
     public WebElement findBottom(int positionB) {
@@ -178,12 +209,14 @@ public class RefineGlobal extends Base {
     }
 
     public void clickOr() {
-        isDisplayedBy(AddGroup, 5);
-        click(AddGroup);
-        isDisplayedBy(AddPurchaseGroup, 5);
-        click(AddPurchaseGroup);
+        isDisplayedBy(addGroup, 5);
+        click(addGroup);
+        isDisplayedBy(addPurchaseGroup, 5);
+        click(addPurchaseGroup);
 
     }
+
+    //EDITING TITLE AND DESCRIPTION (SEE ALSO CLASSES SEGMENT TITLE AND SEGMENT DESCRIPTION FOR POP-UP CONTROLS)
 
     public void openTitle() {
         isDisplayedBy(editTitle, 5);
@@ -195,6 +228,7 @@ public class RefineGlobal extends Base {
         click(editDescription);
     }
 
+    //MAIN NAVIGATION BETWEEN THE THREE TABS FOR EACH SEGMENT (SUMMARY, REFINE, SETTINGS) |  MAIN NAVIGATION BETWEEN THE THREE TABS FOR EACH SEGMENT (SUMMARY, REFINE, SETTINGS)
 
     public void summaryTab() {
         isDisplayedBy(summaryTab, 5);
@@ -211,6 +245,7 @@ public class RefineGlobal extends Base {
         click(settingsTab);
     }
 
+    //SEGMENT DETAIL PAGE (SEE ALSO CLASS "SEGMENT CHART VIEW")  |  SEGMENT DETAIL PAGE (SEE ALSO CLASS "SEGMENT CHART VIEW")
 
     public void summaryChartView() {
         isDisplayedBy(summaryCalculationsTab,5);
@@ -231,7 +266,6 @@ public class RefineGlobal extends Base {
         isDisplayedBy(rfmCalculationsTab, 5);
         click(rfmCalculationsTab);
     }
-
 
     //FILTERS
 
@@ -331,7 +365,6 @@ public class RefineGlobal extends Base {
         return filterRateConvertToClick;
     }
 
-
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Rate: Convert-to-Sent')]")
     public WebElement filterRateConvertToSent;
 
@@ -364,12 +397,28 @@ public class RefineGlobal extends Base {
         return filterAgeRange;
     }
 
-    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'City')]")
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Birthday')]")
+    public WebElement filterBirthday;
+
+    public WebElement birthday() {
+        isDisplayed(filterBirthday, 5);
+        return filterBirthday;
+    }
+
+        @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'City')]")
     public WebElement filterCity;
 
     public WebElement city() {
         isDisplayed(filterCity, 5);
         return filterCity;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Country')]")
+    public WebElement filterCountry;
+
+    public WebElement country() {
+        isDisplayed(filterCountry, 5);
+        return filterCountry;
     }
 
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Customer Id')]")
@@ -380,12 +429,44 @@ public class RefineGlobal extends Base {
         return filterCustomerID;
     }
 
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Education Level')]")
+    public WebElement filterEducationLevel;
+
+    public WebElement educationLevel() {
+        isDisplayed(filterEducationLevel, 5);
+        return filterEducationLevel;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Family Status')]")
+    public WebElement filterFamilyStatus;
+
+    public WebElement familyStatus() {
+        isDisplayed(filterFamilyStatus, 5);
+        return filterFamilyStatus;
+    }
+
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Gender')]")
     public WebElement filterGender;
 
     public WebElement gender() {
         isDisplayed(filterGender, 5);
         return filterGender;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Income')]")
+    public WebElement filterIncome;
+
+    public WebElement income() {
+        isDisplayed(filterIncome, 5);
+        return filterIncome;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Marital Status')]")
+    public WebElement filterMaritalStatus;
+
+    public WebElement maritalStatus() {
+        isDisplayed(filterMaritalStatus, 5);
+        return filterMaritalStatus;
     }
 
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'People Loyalty')]")
@@ -460,7 +541,6 @@ public class RefineGlobal extends Base {
         return filterStoreDistrictManager;
     }
 
-
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Store: Manager')]")
     public WebElement filterStoreManager;
 
@@ -509,14 +589,69 @@ public class RefineGlobal extends Base {
         return filterBrand;
     }
 
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Category')]")
+    public WebElement filterCategory;
 
+    public WebElement category() {
+        isDisplayed(filterCategory, 5);
+        return filterCategory;
+    }
 
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Department')]")
+    public WebElement filterDepartment;
 
+    public WebElement department() {
+        isDisplayed(filterDepartment, 5);
+        return filterDepartment;
+    }
 
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Purchase Count')]")
+    public WebElement filterPurchaseCount;
 
+    public WebElement purchaseCount() {
+        isDisplayed(filterPurchaseCount, 5);
+        return filterPurchaseCount;
+    }
 
-    
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Purchase Frequency')]")
+    public WebElement filterPurchaseFrequency;
 
+    public WebElement purchaseFrequency() {
+        isDisplayed(filterPurchaseFrequency, 5);
+        return filterPurchaseFrequency;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Purchase Recency')]")
+    public WebElement filterPurchaseRecency;
+
+    public WebElement purchaseRecency() {
+        isDisplayed(filterPurchaseRecency, 5);
+        return filterPurchaseRecency;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'SKU')]")
+    public WebElement filterSku;
+
+    public WebElement sku() {
+        isDisplayed(filterSku, 5);
+        return filterSku;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Style')]")
+    public WebElement filterStyle;
+
+    public WebElement style() {
+        isDisplayed(filterStyle, 5);
+        return filterStyle;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Sub-Category')]")
+    public WebElement filterSubCategory;
+
+    public WebElement subCategory() {
+        isDisplayed(filterSubCategory, 5);
+        return filterSubCategory;
+    }
 
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Total Spend')]")
     public WebElement filterTotalSpend;
@@ -526,6 +661,21 @@ public class RefineGlobal extends Base {
         return filterTotalSpend;
     }
 
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Transaction Spend')]")
+    public WebElement filterTransactionSpend;
+
+    public WebElement transactionSpend() {
+        isDisplayed(filterTransactionSpend, 5);
+        return filterTransactionSpend;
+    }
+
+    @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Vendor Name')]")
+    public WebElement filterVendorName;
+
+    public WebElement vendorName() {
+        isDisplayed(filterVendorName, 5);
+        return filterVendorName;
+    }
 
     //SETTINGS TOGGLES, SETTINGS TOGGLES,SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES,
 
@@ -575,23 +725,7 @@ public class RefineGlobal extends Base {
         isDisplayedBy(countComplete, 200);
     }
 
-    public void addCampaignGroup() {
-        isDisplayedBy(AddGroup, 5);
-        click(AddGroup);
-        isDisplayedBy(AddCampaignGroup, 5);
-        click(AddCampaignGroup);
-        //isDisplayed(group, 5);
-        //return group.getText();
-    }
 
-    public void addPeopleGroup() {
-        isDisplayedBy(AddGroup, 5);
-        click(AddGroup);
-        isDisplayedBy(AddPeopleGroup, 5);
-        click(AddPeopleGroup);
-        //isDisplayed(group, 5);
-        //return group.getText();
-    }
 
 /*
 

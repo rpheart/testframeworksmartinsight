@@ -20,6 +20,7 @@ public class TestNewSegmentPractice extends Base {
     HomeNavigation navigation = new HomeNavigation();
     Analyze manager;
     SegmentChartViews segmentCharts;
+    QOSOTemplateConfig qoso;
 
 
     @BeforeClass
@@ -33,6 +34,8 @@ public class TestNewSegmentPractice extends Base {
         RG = PageFactory.initElements(driver, RefineGlobal.class);
         manager = PageFactory.initElements(driver, Analyze.class);
         segmentCharts = PageFactory.initElements(driver, SegmentChartViews.class);
+        qoso = PageFactory.initElements(driver, QOSOTemplateConfig.class);
+
     }
 
 
@@ -49,17 +52,63 @@ public class TestNewSegmentPractice extends Base {
         RG.addPurchaseGroup();
 
         //FILTERS
-        UtilityDragger.drag(RG.ageRange(), RG.getDropZone(2));
-        for (WebElement checkBox : lovFilter.genericLOV("18-20", "21-24")) {
-            checkBox.click();
+        UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(1));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
         }
-        for (WebElement checkBox : lovFilter.genericLOV("18-20")) {
-            checkBox.click();
+
+        qoso.qosoAmount(1, 1,"at least", "50");
+        qoso.qosoQuantity(1, 1,"between", "50");
+
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
         }
+
+
+
+
+        UtilityDragger.drag(RG.city(), RG.getDropZone(1));
+
+        lovFilter.genericLOV("Seattle", "Baltimore");
+
         lovFilter.saveFilter();
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
         amountFilter.inBetween("4", "500");
+        amountFilter.saveFilter();
+
+        //qoso container practice
+
+
+        UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+        UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+
+        UtilityDragger.drag(RG.city(), qoso.getQOSODropZone(2,3));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+
+      lovFilter.genericLOV("Baltimore", "Seattle");
+
         lovFilter.saveFilter();
 
         //TURN ON TOGGLE

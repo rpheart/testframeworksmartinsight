@@ -40,6 +40,11 @@ public class Base {
     }
 
 
+
+    public void clickString(By xpath) {
+        findString(xpath).click();
+    }
+
     private void waitFor (ExpectedCondition<WebElement> condition, Integer timeout) {
         timeout = timeout != null ? timeout : 10;
         WebDriverWait wait = new WebDriverWait(driver, timeout);
