@@ -27,6 +27,7 @@ public class Base {
         return driver.findElement(xpath);
     }
 
+
     public List<WebElement> findElements (By locator) {
         return driver.findElements(locator);
     }
@@ -39,11 +40,6 @@ public class Base {
         find(locator).click();
     }
 
-
-
-    public void clickString(By xpath) {
-        findString(xpath).click();
-    }
 
     private void waitFor (ExpectedCondition<WebElement> condition, Integer timeout) {
         timeout = timeout != null ? timeout : 10;
@@ -67,6 +63,16 @@ public class Base {
         return true;
     }
 
+/*    public Boolean isDisplayedE(WebElement, int maxWaitTime) {
+        try {
+            waitFor(ExpectedConditions.visibilityOf(WebElement), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return false;
+        }
+        return true;
+    }*/
+
+
     public Boolean isDisplayedBy (By locator, int maxWaitTime){
         try {
             waitFor(ExpectedConditions.visibilityOfElementLocated(locator), maxWaitTime);
@@ -75,6 +81,8 @@ public class Base {
         }
         return true;
     }
+
+
 
     public Boolean isNotDisplayedBy (By locator, int maxWaitTime) {
         try {

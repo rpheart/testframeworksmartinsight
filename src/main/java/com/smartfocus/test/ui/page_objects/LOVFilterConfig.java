@@ -59,7 +59,6 @@ public class LOVFilterConfig extends Base {
     }
 
 
-
     public void saveFilter() {
         isDisplayedBy(saveFilterButton, 5);
         click(saveFilterButton);

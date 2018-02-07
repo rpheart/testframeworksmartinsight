@@ -48,8 +48,8 @@ public class TestNewSegmentPractice extends Base {
         RG.openDescription();
         editDescription.newDescription("New description of segment");
 
-        //ADD FILTER GROUPS AND FILTERS
-        RG.addPurchaseGroup();
+        RG.findAddedGroups();
+
 
         //FILTERS
         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(1));
@@ -59,9 +59,17 @@ public class TestNewSegmentPractice extends Base {
 
         }
 
-        qoso.qosoAmount(1, 1,"at least", "50");
-        qoso.qosoQuantity(1, 1,"between", "50");
+        UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(1));
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
 
+        }
+
+        qoso.qosoAmount(1, 2, "between", "5", "100");
+        qoso.qosoQuantity(1, 2, "at least", "2");
+        qoso.qosoItems(1, 2, "department", "womens");
+        qoso.qosoTransactions(1, 2, "any");
 
         try {
             Thread.sleep(3000);
@@ -77,6 +85,10 @@ public class TestNewSegmentPractice extends Base {
         lovFilter.genericLOV("Seattle", "Baltimore");
 
         lovFilter.saveFilter();
+
+        //ADD FILTER GROUPS AND FILTERS
+        RG.addPurchaseGroup();
+
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
         amountFilter.inBetween("4", "500");
