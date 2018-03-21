@@ -18,12 +18,6 @@ public class AmountFilterConfig extends Base {
     By valueEntryBetween2 = By.xpath("//*[@id='modalFilterContents']/div[2]/div/div[1]/div[3]/div[2]/div[3]/input[2]");
     By modal = By.cssSelector(".aggregated-filter-view-leadingLabel");
 
-    //@FindBy(className = "form-control comparator-select")
-
-//    @FindBy(xpath = "//*[@id='modalFilterContents']/div[2]/div/div[1]/div[3]/div[2]/select")
-//    public WebElement valueQualifier;
-
-
 
     public void atMost(String value) {
         isDisplayedBy(valueQualifier, 5);
@@ -87,6 +81,39 @@ public class AmountFilterConfig extends Base {
         isDisplayedBy(cancelFilterButton, 5);
         click(cancelFilterButton);
     }
+
+    String appliedLovFilterTemplate = "//div[@class='applied_filter_items']//*[contains(text(), \"filterName\")]/../div[3]";
+    String amountFilter;
+    String amountFilterText;
+    String amountFilterTemplateText = "qualifier value in the selected time period.";
+
+    public Boolean amountFilterSuccess(String filter, String qualifier, String... value) {
+        String appliedFilterPattern = appliedLovFilterTemplate.replace("filterName", filter);
+        By theappliedFilter = By.xpath(appliedFilterPattern);
+        WebElement appliedFilter = find(theappliedFilter);
+        isDisplayed(appliedFilter, 5);
+        amountFilterText = appliedFilter.getText();
+        if ( qualifier.equalsIgnoreCase("at least") ) {
+            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%s", value[0]));
+        } else if ( qualifier.equalsIgnoreCase("at most") ) {
+            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%s", value[0]));
+        } else if ( qualifier.equalsIgnoreCase("between") ) {
+            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("$%s and $%s", value[0], value[1]));
+        }
+        System.out.println(amountFilter);
+        System.out.println(amountFilterText);
+        if ( amountFilterText.contains(amountFilter) ) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+
+
+
 
 
 }

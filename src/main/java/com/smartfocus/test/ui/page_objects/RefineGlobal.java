@@ -50,6 +50,16 @@ public class RefineGlobal extends Base {
     By totalSpendToggle = By.xpath("//*[@class='generate-product']/div/div");
     By rfmToggle = By.xpath("//*[@class='generate-rfm']/div/div");
 
+    //LOV ASSERTION CONTROLS
+    By lovList = By.xpath("//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']");
+    By filterSearchBox = By.xpath("//div[@id='modalFilterContents']//*[@class='form-control search-query textSelectable']");
+    By selectAllButton = By.xpath("//div[@id='modalFilterContents']//*[@class='selectAll']");
+    By unselectAllButton = By.xpath("//div[@id='modalFilterContents']//*[@class='unselectAll']");
+    LOVFilterConfig lovFilter = new LOVFilterConfig();
+
+
+    String segmentTitleText;
+    String segmentDescriptionText;
 
 
     //Filter Group list element
@@ -75,7 +85,8 @@ public class RefineGlobal extends Base {
 
     public int findAddedGroups() {
         groups = null;
-        groups = driver.findElements(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[*]/div[2]/div[1]/div/div/div[3]"));
+        groups = driver.findElements(By.xpath("//*[@class='applied_filter_items']/div[*]/div[2]/div[1]/div/div/div[3]"));
+
         return groups.size();
     }
 
@@ -91,17 +102,17 @@ public class RefineGlobal extends Base {
 
     //WHERE TO DROP THAT FILTER? GETDROPZONE IS DEFAULT, BUT ALSO INCLUDED HERE IS TOP/BOTTOM AND SPEND ON
     public WebElement getDropZone(int position) {
-        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul"));
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul"));
         return dropZone;
     }
 
     public WebElement getTopDropZone(int position) {
-        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/ul[1]"));
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/ul[1]"));
         return dropZone;
     }
 
     public WebElement getBottomDropZone(int position) {
-        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/ul[2]"));
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/ul[2]"));
         return dropZone;
     }
 
@@ -109,6 +120,9 @@ public class RefineGlobal extends Base {
 
 
     //ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS ADD FILTER GROUPS
+
+    String addedGroupTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div//*[contains(text(), \"filterGroupType\")]";
+    String appliedGroupText;
 
 
     public WebElement addPurchaseGroup() {
@@ -147,7 +161,16 @@ public class RefineGlobal extends Base {
         return fg;
     }
 
+    public boolean groupAdded(String groupPosition, String addedFilterGroup) {
+        isDisplayedBy(editTitle, 5);
+        String appliedGroupPattern = addedGroupTemplate.replace("position", groupPosition).replace("filterGroupType", addedFilterGroup);
+        appliedGroupText = driver.findElement(By.xpath(appliedGroupPattern)).getText();
 
+        if ( appliedGroupText.contains(addedFilterGroup) ) {
+            return true;
+        }
+        return false;
+    }
 
 //ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS
 
@@ -159,6 +182,59 @@ public class RefineGlobal extends Base {
         return templateAndOr;
     }
 
+    public WebElement andOrButtonAnd(int position) {
+        WebElement andButton = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[1]"));
+        return andButton;
+    }
+
+    public WebElement andOrButtonOR (int position) {
+        WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[2]"));
+        return dropZone;
+    }
+
+    String itemValuesDisplayed;
+    String appliedFilterTemplate = "//div[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[3]/ul/li/div/div[@class='available-filter' and contains (text(), 'appliedFilter')]";
+    String lovCheckedPattern = "//div[@class='ui-widget-content slick-row even' or @class='ui-widget-content slick-row odd']//*[text()= \"lovValue\"]/../div[1]/i[@class = 'insightsCheckBox topOffsetSevenPx checked']";
+
+    String orEnabledContainer= "//div[@class='child-rule-container-header']/div";
+    String andEnabledContainer ="";
+
+    boolean verifyAndOrContainer(int filterGroup, String AndOr) {
+        WebElement andButton = groups.get(filterGroup-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + filterGroup + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains text, 'AndOr']"));
+
+
+        return false;
+    }
+    /*        findAddedQOSOContainers();
+        By foundItemButton = By.xpath(qosoItemButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+        WebElement itemButton = find(foundItemButton);
+        isDisplayed(itemButton, 5);
+        itemValuesDisplayed = itemButton.getText();
+        itemButton.click();
+
+        if ( !itemValuesDisplayed.contains(itemLevel) ) {
+            return false;
+        }
+
+        for (String label : labels) {
+            String pattern = lovCheckedPattern.replace("lovValue", label);
+            By location = By.xpath(pattern);
+
+            isDisplayedBy(qosoFilterSearchTextBox, 5);
+
+            click(qosoFilterSearchTextBox);
+            find(qosoFilterSearchTextBox).clear();
+            find(qosoFilterSearchTextBox).sendKeys(label);
+
+            WebElement filterCheck = find(location);
+            checkBoxes.add(filterCheck);
+            filterCheck.getText();
+
+            if ( !filterCheck.isDisplayed() ) {
+                return false;
+            }*/
+
+
 
     @FindBy(xpath = "//div[@class='available_container_items']//*[contains(text(), 'Quantity Of/Spend On Template')]")
     public WebElement templateQoso;
@@ -169,7 +245,7 @@ public class RefineGlobal extends Base {
     }
 
 
-    String filterGroupPattern = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[i]/div[2]/div[1]/ul";
+    String filterGroupPattern = "//*[@class='applied_filter_items']/div[i]/div[2]/div[1]/ul";
 
     public WebElement findFilterGroup(int position) {
         By location = By.xpath(filterGroupPattern.replace("[i]", String.format("%s%d%s", "[", position, "]")));
@@ -177,7 +253,7 @@ public class RefineGlobal extends Base {
         return groups.get(position - 1);
     }
 
-    String filterGroupAndOrTopPattern = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[a]/div[2]/div[1]/ul/li/div[3]/ul[1]";
+    String filterGroupAndOrTopPattern = "//*[@class='applied_filter_items']/div[a]/div[2]/div[1]/ul/li/div[3]/ul[1]";
 
     public WebElement findTop(int positionA) {
         By location = By.xpath(filterGroupAndOrTopPattern.replace("[a]", String.format("%s%d%s", "[", positionA, "]")));
@@ -185,7 +261,7 @@ public class RefineGlobal extends Base {
         return groups.get(positionA - 1);
     }
 
-    String filterGroupAndOrBottomPattern = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div[b]/div[2]/div[1]/ul/li/div[3]/ul[2]";
+    String filterGroupAndOrBottomPattern = "//*[@class='applied_filter_items']/div[b]/div[2]/div[1]/ul/li/div[3]/ul[2]";
 
     public WebElement findBottom(int positionB) {
         By location = By.xpath(filterGroupAndOrBottomPattern.replace("[b]", String.format("%s%d%s", "[", positionB, "]")));
@@ -194,27 +270,6 @@ public class RefineGlobal extends Base {
     }
 
 
-    @FindBy(xpath = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div/div[2]/div[1]/ul/li/div[3]/ul[1]")
-    public WebElement filterGroup1Top;
-
-    public WebElement firstGroupTop() {
-        return filterGroup1Top;
-    }
-
-    @FindBy(xpath = "//*[@id='refine']/div/div/div/div[2]/div[2]/div[2]/div/div[2]/div[1]/ul/li/div[3]/ul[2]")
-    public WebElement FilterGroup1Bottom;
-
-    public WebElement firstGroupBottom() {
-        return FilterGroup1Bottom;
-    }
-
-    public void clickOr() {
-        isDisplayedBy(addGroup, 5);
-        click(addGroup);
-        isDisplayedBy(addPurchaseGroup, 5);
-        click(addPurchaseGroup);
-
-    }
 
     //EDITING TITLE AND DESCRIPTION (SEE ALSO CLASSES SEGMENT TITLE AND SEGMENT DESCRIPTION FOR POP-UP CONTROLS)
 
@@ -223,9 +278,27 @@ public class RefineGlobal extends Base {
         click(editTitle);
     }
 
+    public boolean segmentTitleChangeSuccess(String newTitle) {
+        isDisplayedBy(editTitle, 5);
+        segmentTitleText = driver.findElement(By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable")).getText();
+        if (segmentTitleText.equalsIgnoreCase(newTitle)) {
+            return true;
+        }
+        return false;
+    }
+
     public void openDescription() {
         isDisplayedBy(editDescription, 5);
         click(editDescription);
+    }
+
+    public boolean segmentDescriptionChangeSuccess(String newDescription) {
+        isDisplayedBy(editTitle, 5);
+        segmentDescriptionText = driver.findElement(By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable")).getText();
+        if (segmentDescriptionText.equalsIgnoreCase(newDescription)) {
+            return true;
+        }
+        return false;
     }
 
     //MAIN NAVIGATION BETWEEN THE THREE TABS FOR EACH SEGMENT (SUMMARY, REFINE, SETTINGS) |  MAIN NAVIGATION BETWEEN THE THREE TABS FOR EACH SEGMENT (SUMMARY, REFINE, SETTINGS)
@@ -659,7 +732,8 @@ public class RefineGlobal extends Base {
     public WebElement totalSpend() {
         isDisplayed(filterTotalSpend, 5);
         return filterTotalSpend;
-    }
+            }
+
 
     @FindBy(xpath = "//div[@class='available_filters_container']//*[contains(text(), 'Transaction Spend')]")
     public WebElement filterTransactionSpend;

@@ -35,7 +35,6 @@ public class TestNewSegmentPractice extends Base {
         manager = PageFactory.initElements(driver, Analyze.class);
         segmentCharts = PageFactory.initElements(driver, SegmentChartViews.class);
         qoso = PageFactory.initElements(driver, QOSOTemplateConfig.class);
-
     }
 
 
@@ -66,10 +65,10 @@ public class TestNewSegmentPractice extends Base {
 
         }
 
-        qoso.qosoAmount(1, 2, "between", "5", "100");
-        qoso.qosoQuantity(1, 2, "at least", "2");
-        qoso.qosoItems(1, 2, "department", "womens");
-        qoso.qosoTransactions(1, 2, "any");
+        qoso.setQosoAmount(1, 2, "between", "5", "100");
+        qoso.setQosoQuantity(1, 2, "at least", "2");
+        qoso.setQosoItems(1, 2, "department", "Women's", "Ski");
+        qoso.setQosoTransactions(1, 2, "any");
 
         try {
             Thread.sleep(3000);
@@ -82,7 +81,7 @@ public class TestNewSegmentPractice extends Base {
 
         UtilityDragger.drag(RG.city(), RG.getDropZone(1));
 
-        lovFilter.genericLOV("Seattle", "Baltimore");
+        lovFilter.toggleLOV( "Seattle", "Baltimore");
 
         lovFilter.saveFilter();
 
@@ -119,7 +118,7 @@ public class TestNewSegmentPractice extends Base {
 
         }
 
-      lovFilter.genericLOV("Baltimore", "Seattle");
+      lovFilter.toggleLOV("Baltimore", "Seattle");
 
         lovFilter.saveFilter();
 

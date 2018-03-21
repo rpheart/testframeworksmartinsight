@@ -12,21 +12,35 @@ public class NewSegment extends Base {
     By createTimeline = By.className("timelineSegmentLine");
     By createAffinity = By.className("affinityLine");
 
+    By segmentTitle = By.className("refineSegmentTitle textSelectable ellipsis text-selectable");
+
+    String segmentTitleText;
+
+
+
     RefineGlobal RG;
 
     public void analyze(){
-
         click(analyze);
     }
 
     public void createButton(){
-        isDisplayedBy(create, 10);
+        isDisplayedBy(create, 120);
         click(create);
     }
 
     public void createCustom(){
         isDisplayedBy(createCustom, 10);
         click(createCustom);
+    }
+
+    public boolean newSegmentStartSuccess() {
+        isDisplayedBy(segmentTitle, 5);
+        segmentTitleText = driver.findElement(By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable")).getText();
+        if (segmentTitleText.equalsIgnoreCase("Custom Segment")) {
+            return true;
+        }
+        return false;
     }
 
     public void createTimeline(){

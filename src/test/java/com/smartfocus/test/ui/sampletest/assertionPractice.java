@@ -2,7 +2,6 @@ package com.smartfocus.test.ui.sampletest;
 
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.utilities.UtilityDragger;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -54,7 +53,7 @@ public class assertionPractice extends Base{
         amountFilter.saveFilter();
 
         UtilityDragger.drag(RG.state(), RG.getDropZone(1));
-        lovFilter.genericLOV("Washington", "California");
+        lovFilter.toggleLOV( "Washington", "California");
         lovFilter.exclude();
         lovFilter.saveFilter();
 
@@ -64,42 +63,44 @@ public class assertionPractice extends Base{
         RG.addPeopleGroup();
 
         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
-        qoso.qosoAmount(2, 1, "between", "5", "100");
-        qoso.qosoQuantity(2, 1, "at least", "2");
-        qoso.qosoItems(2, 1, "department", "Accessories", "Clothing Accessories", "Women's", "Men's", "Ski");
-        qoso.qosoTransactions(2, 1, "all");
+        qoso.setQosoAmount(2, 1, "between", "5", "100");
+        qoso.setQosoQuantity(2, 1, "at least", "2");
+        qoso.setQosoItems(2, 1, "department", "Accessories", "Clothing Accessories", "Women's", "Men's", "Ski");
+        qoso.setQosoTransactions(2, 1, "all");
 
         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
-        qoso.qosoAmount(2, 2, "at most", "500");
-        qoso.qosoQuantity(2, 2, "between", "2", "40");
-        qoso.qosoItems(2, 2, "category", "Accessories", "Accessories Misc", "Women's Shoes", "Women's Casual Shirts", "Men's Footwear", "Men's Casual Shirts", "Socks");
-        qoso.qosoTransactions(2, 2, "any");
+        qoso.setQosoAmount(2, 2, "at most", "500");
+        qoso.setQosoQuantity(2, 2, "between", "2", "40");
+        qoso.setQosoItems(2, 2, "category", "Accessories", "Accessories Misc", "Women's Shoes", "Women's Casual Shirts", "Men's Footwear", "Men's Casual Shirts", "Socks");
+        qoso.setQosoTransactions(2, 2, "any");
 
         UtilityDragger.drag(RG.ageRange(), qoso.getQOSODropZone(2, 2));
         lovFilter.selectAll();
-        lovFilter.genericLOV("18-20", "21-24");
+        lovFilter.toggleLOV( "18-20", "21-24");
         lovFilter.saveFilter();
 
         UtilityDragger.drag(RG.salesChannel(), qoso.getQOSODropZone(2, 2));
-        lovFilter.genericLOV("Catalog");
+        lovFilter.toggleLOV("Catalog");
         lovFilter.exclude();
         lovFilter.saveFilter();
 
 
-        // Third filter group: Campaign. And/Or container, 2 filters (1 each half)
+        // Third filter group: Campaign. And/Or container flipped to AND, 2 filters (1 each half)
 
         RG.addPurchaseGroup();
         UtilityDragger.drag(RG.andOrContainer(), RG.getDropZone(3));
 
         UtilityDragger.drag(RG.department(), RG.getBottomDropZone(3));
         lovFilter.selectAll();
-        lovFilter.genericLOV("Camp", "Climb");
+        lovFilter.toggleLOV("Camp", "Climb");
         lovFilter.saveFilter();
 
         UtilityDragger.drag(RG.category(), RG.getTopDropZone(3));
         lovFilter.selectAll();
-        lovFilter.genericLOV("Camp Misc", "Daypacks");
+        lovFilter.toggleLOV("Camp Misc", "Daypacks");
         lovFilter.saveFilter();
+
+        RG.andOrButtonAnd(3).click();
 
 
         // Settings: All calculations on
@@ -125,7 +126,7 @@ public class assertionPractice extends Base{
 
         //Delete Segement
 
-        navigation.analyze();
+/*        navigation.analyze();
 
         for (WebElement checkBox : manager.segmentList("Assertion Practice")) {
             checkBox.click();
@@ -137,7 +138,7 @@ public class assertionPractice extends Base{
             Thread.sleep(3000);
         } catch (InterruptedException exception) {
 
-        }
+        }*/
 
 
     }

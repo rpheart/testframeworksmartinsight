@@ -7,7 +7,7 @@ public class Logins extends Base{
     By username = By.id("IDToken1");
     By password = By.id("IDToken2");
     By loginButton = By.id("loginButton");
-
+    By sfLogo = By.className("sf_logo");
 
     public void usernameSidevall(){
         type(username, "sidevall");
@@ -22,7 +22,7 @@ public class Logins extends Base{
     }
 
     public void passwordSitest01_all(){
-        type(password, "HeadCheese!5");
+        type(password, "HeadCheese!8");
     }
 
     public void usernameBellevue_qa(){
@@ -55,6 +55,15 @@ public class Logins extends Base{
         passwordBellevue_qa();
         clickLogin();
     }
+
+
+    //ASSERTIONS ASSERTIONS ASSERTIONS
+
+    public Boolean loginSuccess() {
+        return isDisplayedBy(sfLogo, 15);
+    }
+
+
 
 
 }

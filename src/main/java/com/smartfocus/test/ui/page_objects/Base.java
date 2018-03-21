@@ -1,12 +1,13 @@
 package com.smartfocus.test.ui.page_objects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-//import org.openqa.selenium.support.ui.ExpectedCondition<org.openqa.selenium.WebElement>;
 
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class Base {
         return driver.findElement(locator);
     }
 
+
     public WebElement findString (By xpath) {
         return driver.findElement(xpath);
     }
@@ -38,6 +40,12 @@ public class Base {
 
     public void click (By locator) {
         find(locator).click();
+    }
+
+
+    public void doubleClick(WebElement locator) {
+        Actions action = new Actions(driver);
+        action.doubleClick(locator).perform();
     }
 
 
@@ -62,6 +70,18 @@ public class Base {
         }
         return true;
     }
+
+    public Boolean isNotDisplayed(WebElement locator, int maxWaitTime) {
+        try {
+            waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return false;
+        }
+        return true;
+    }
+
+
+
 
 /*    public Boolean isDisplayedE(WebElement, int maxWaitTime) {
         try {
