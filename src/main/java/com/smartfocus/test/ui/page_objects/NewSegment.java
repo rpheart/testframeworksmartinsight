@@ -12,7 +12,7 @@ public class NewSegment extends Base {
     By createTimeline = By.className("timelineSegmentLine");
     By createAffinity = By.className("affinityLine");
 
-    By segmentTitle = By.className("refineSegmentTitle textSelectable ellipsis text-selectable");
+    By segmentTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
 
     String segmentTitleText;
 

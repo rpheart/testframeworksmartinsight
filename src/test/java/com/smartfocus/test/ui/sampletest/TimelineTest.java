@@ -1,11 +1,10 @@
 package com.smartfocus.test.ui.sampletest;
 
 import com.smartfocus.test.ui.page_objects.*;
-import com.smartfocus.test.ui.utilities.UtilityDragger;
+import com.smartfocus.test.ui.Utilities.UtilityDragger;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import com.smartfocus.test.Assert;
 
 public class TimelineTest extends Base {
 
@@ -46,7 +45,7 @@ public class TimelineTest extends Base {
         RG.findAddedGroups();
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
-        amountFilter.inBetween("25", "500");
+        amountFilter.inBetween(25, 500);
         amountFilter.saveFilter();
 
     }

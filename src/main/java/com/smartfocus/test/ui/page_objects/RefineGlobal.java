@@ -18,9 +18,7 @@ public class RefineGlobal extends Base {
     By editTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
     By editDescription = By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable");
 
-    By notCalculated = By.cssSelector("//div[@class='cust-count-span' and contains(text(), ' Not Yet Calculated')]");
-    By updatingCount = By.cssSelector(".progress.progress-striped.active");
-    By countComplete = By.cssSelector((".cust-count-span"));
+
 
     //save button and its dropdown elements
     By saveButton = By.cssSelector(".btn.save-update");
@@ -42,13 +40,7 @@ public class RefineGlobal extends Base {
     By totalSpendCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Total Spend by Product')]");
     By rfmCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Segment RFM')]");
 
-    //SETTINGS TOGGLE CONTROLS
 
-    By lockedSegmentToggle = By.xpath("//*[@class='locked-segment']/div/div");
-    By workGroupToggle = By.xpath("//*[@class='grouped-segmentation']/div/div");
-    By ageAndGenderToggle = By.xpath("//*[@class='generate-demo']/div/div");
-    By totalSpendToggle = By.xpath("//*[@class='generate-product']/div/div");
-    By rfmToggle = By.xpath("//*[@class='generate-rfm']/div/div");
 
     //LOV ASSERTION CONTROLS
     By lovList = By.xpath("//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']");
@@ -161,9 +153,10 @@ public class RefineGlobal extends Base {
         return fg;
     }
 
-    public boolean groupAdded(String groupPosition, String addedFilterGroup) {
+
+    public boolean groupAdded(int groupPosition, String addedFilterGroup) {
         isDisplayedBy(editTitle, 5);
-        String appliedGroupPattern = addedGroupTemplate.replace("position", groupPosition).replace("filterGroupType", addedFilterGroup);
+        String appliedGroupPattern = addedGroupTemplate.replace("position",  String.format("%d", groupPosition)).replace("filterGroupType", addedFilterGroup);
         appliedGroupText = driver.findElement(By.xpath(appliedGroupPattern)).getText();
 
         if ( appliedGroupText.contains(addedFilterGroup) ) {
@@ -171,6 +164,21 @@ public class RefineGlobal extends Base {
         }
         return false;
     }
+
+    String andOrFilterGroupOperatorTemplate = "//div[@class='applied_filter_items']/div[position]/div[1]/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains(text(), 'AndOrText')]";
+
+    public boolean verifyFilterGroupAndOrOperator(int position, String AndOr) {
+        By andOrfilterGroupOperator = By.xpath(andOrFilterGroupOperatorTemplate.replace("position", String.format("%d", position + 1)).replace("AndOrText", AndOr));
+        WebElement andOrWebElement = find(andOrfilterGroupOperator);
+        String andOrOperatorText = andOrWebElement.getText();
+
+        if ( AndOr.equalsIgnoreCase(andOrOperatorText) ) {
+            return true;
+        }
+        return false;
+    }
+
+
 
 //ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS
 
@@ -182,57 +190,30 @@ public class RefineGlobal extends Base {
         return templateAndOr;
     }
 
-    public WebElement andOrButtonAnd(int position) {
+    public WebElement setAndOrContainerButtonAnd(int position) {
         WebElement andButton = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[1]"));
         return andButton;
     }
 
-    public WebElement andOrButtonOR (int position) {
+    public WebElement setAndOrContainerButtonOr(int position) {
         WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[2]"));
         return dropZone;
     }
 
-    String itemValuesDisplayed;
-    String appliedFilterTemplate = "//div[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[3]/ul/li/div/div[@class='available-filter' and contains (text(), 'appliedFilter')]";
-    String lovCheckedPattern = "//div[@class='ui-widget-content slick-row even' or @class='ui-widget-content slick-row odd']//*[text()= \"lovValue\"]/../div[1]/i[@class = 'insightsCheckBox topOffsetSevenPx checked']";
 
-    String orEnabledContainer= "//div[@class='child-rule-container-header']/div";
-    String andEnabledContainer ="";
+    String andOrEnabledContainer= "//*[@class='applied_filter_items']/div[position]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[@class='btn btn-default btnAndOr btnAndOrText active' and contains(text(), 'AndOrText')]";
+    String enabledButtonText;
 
-    boolean verifyAndOrContainer(int filterGroup, String AndOr) {
-        WebElement andButton = groups.get(filterGroup-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + filterGroup + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains text, 'AndOr']"));
-
-
+    public boolean verifyAndOrContainerOperator(int filterGroup, String AndOr) {
+        By foundAndORButton = By.xpath(andOrEnabledContainer.replace("position", String.format("%d", filterGroup)).replace("AndOrText", AndOr));
+        WebElement foundAndOrButton = find(foundAndORButton);
+        isDisplayed(foundAndOrButton, 5);
+        enabledButtonText = find(foundAndORButton).getText();
+       if ( enabledButtonText.equalsIgnoreCase(AndOr) ) {
+           return true;
+       }
         return false;
     }
-    /*        findAddedQOSOContainers();
-        By foundItemButton = By.xpath(qosoItemButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
-        WebElement itemButton = find(foundItemButton);
-        isDisplayed(itemButton, 5);
-        itemValuesDisplayed = itemButton.getText();
-        itemButton.click();
-
-        if ( !itemValuesDisplayed.contains(itemLevel) ) {
-            return false;
-        }
-
-        for (String label : labels) {
-            String pattern = lovCheckedPattern.replace("lovValue", label);
-            By location = By.xpath(pattern);
-
-            isDisplayedBy(qosoFilterSearchTextBox, 5);
-
-            click(qosoFilterSearchTextBox);
-            find(qosoFilterSearchTextBox).clear();
-            find(qosoFilterSearchTextBox).sendKeys(label);
-
-            WebElement filterCheck = find(location);
-            checkBoxes.add(filterCheck);
-            filterCheck.getText();
-
-            if ( !filterCheck.isDisplayed() ) {
-                return false;
-            }*/
 
 
 
@@ -278,7 +259,7 @@ public class RefineGlobal extends Base {
         click(editTitle);
     }
 
-    public boolean segmentTitleChangeSuccess(String newTitle) {
+    public boolean verifySegmentTitleChange(String newTitle) {
         isDisplayedBy(editTitle, 5);
         segmentTitleText = driver.findElement(By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable")).getText();
         if (segmentTitleText.equalsIgnoreCase(newTitle)) {
@@ -292,7 +273,7 @@ public class RefineGlobal extends Base {
         click(editDescription);
     }
 
-    public boolean segmentDescriptionChangeSuccess(String newDescription) {
+    public boolean verifySegmentDescriptionChange(String newDescription) {
         isDisplayedBy(editTitle, 5);
         segmentDescriptionText = driver.findElement(By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable")).getText();
         if (segmentDescriptionText.equalsIgnoreCase(newDescription)) {
@@ -751,42 +732,83 @@ public class RefineGlobal extends Base {
         return filterVendorName;
     }
 
-    //SETTINGS TOGGLES, SETTINGS TOGGLES,SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES,
 
-    public void toggleLockSetting() {
-        isDisplayedBy(lockedSegmentToggle, 5);
-        click(lockedSegmentToggle);
-    }
 
-    public void toggleWorkgroupSetting() {
-        isDisplayedBy(workGroupToggle, 5);
-        click(workGroupToggle);
-    }
 
-    public void toggleAgeAndGenderSetting() {
-        isDisplayedBy(ageAndGenderToggle, 5);
-        click(ageAndGenderToggle);
-    }
-
-    public void toggleTotalSpendSetting() {
-        isDisplayedBy(totalSpendToggle,5);
-        click(totalSpendToggle);
-    }
-
-    public void toggleRFM() {
-        isDisplayedBy(rfmToggle, 5);
-        click(rfmToggle);
-    }
-
+    By notCalculated = By.xpath("//div[@class='cust-count-span' and contains(text(), ' Not Yet Calculated')]");
+    By updatingCount = By.cssSelector(".progress.progress-striped.active");
+    By countComplete = By.cssSelector((".cust-count-span"));
 
     public void saveSegment() {
+        isDisplayedBy(notCalculated, 10);
         isDisplayedBy(saveButton, 5);
         click(saveButton);
-        isDisplayedBy(notCalculated, 10);
         isDisplayedBy(updatingCount, 10);
         isNotDisplayedBy(updatingCount, 150);
         isDisplayedBy(countComplete, 200);
     }
+
+    By summarySegmentTotalPeople = By.cssSelector(".cskpi-value.cskpi-seg-total-customer-value");
+
+    public boolean verifySegmentSavedKnownCount(String peopleCount) {
+        isDisplayedBy(countComplete, 120);
+        String peopleCountText = find(countComplete).getText();
+        System.out.println(peopleCountText);
+        if ( peopleCountText.contains( peopleCount) ) {
+
+            return true;
+        }
+
+        summaryTab();
+        String segmentTotalPeopleText = find(summarySegmentTotalPeople).getText();
+        System.out.println(segmentTotalPeopleText);
+        if ( segmentTotalPeopleText.equalsIgnoreCase(peopleCount) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean verifySegmentSavedUnknownCount() {
+        waitOneSecond();
+        isDisplayedBy(countComplete, 120);
+        String peopleCountText = find(countComplete).getText();
+        System.out.println(peopleCountText);
+        summaryTab();
+        String segmentTotalPeopleText = find(summarySegmentTotalPeople).getText();
+        System.out.println(segmentTotalPeopleText);
+        if ( peopleCountText.contains(segmentTotalPeopleText) ) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+    /*   public boolean groupAdded(String groupPosition, String addedFilterGroup) {
+        isDisplayedBy(editTitle, 5);
+        String appliedGroupPattern = addedGroupTemplate.replace("position", groupPosition).replace("filterGroupType", addedFilterGroup);
+        appliedGroupText = driver.findElement(By.xpath(appliedGroupPattern)).getText();
+
+        if ( appliedGroupText.contains(addedFilterGroup) ) {
+            return true;
+        }
+        return false;
+    }
+
+    String andOrFilterGroupOperatorTemplate = "//div[@class='applied_filter_items']/div[position]/div[1]/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains(text(), 'AndOrText')]";
+
+    public boolean verifyFilterGroupAndOrOperator(int position, String AndOr) {
+        By andOrfilterGroupOperator = By.xpath(andOrFilterGroupOperatorTemplate.replace("position", String.format("%d", position + 1)).replace("AndOrText", AndOr));
+        WebElement andOrWebElement = find(andOrfilterGroupOperator);
+        String andOrOperatorText = andOrWebElement.getText();
+
+        if ( AndOr.equalsIgnoreCase(andOrOperatorText) ) {
+            return true;
+        }
+        return false;
+    }
+*/
 
     public void saveExistingSegment() {
         isDisplayedBy(saveButton, 5);
@@ -797,6 +819,41 @@ public class RefineGlobal extends Base {
         isDisplayedBy(updatingCount, 10);
         isNotDisplayedBy(updatingCount, 150);
         isDisplayedBy(countComplete, 200);
+    }
+
+
+    By exportSegmentDetailButton = By.xpath("//div[@class='btn-group segmentActionsDropDown']");
+    By exportDownload = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Download\")]");
+    By exportEmail = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Export to Smart Email\")]");
+    By exportSFTPFTP = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Export To SFTP/FTP\")]");
+    By exportCustomReports = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Download\")]");
+
+    public void exportToDownload() {
+        isDisplayedBy(exportSegmentDetailButton, 10);
+        click(exportSegmentDetailButton);
+        isDisplayedBy(exportDownload, 5);
+        click(exportDownload);
+    }
+
+    public void exportToEmail() {
+        isDisplayedBy(exportSegmentDetailButton, 10);
+        click(exportSegmentDetailButton);
+        isDisplayedBy(exportEmail, 5);
+        click(exportEmail);
+    }
+
+    public void exportToSFTP() {
+        isDisplayedBy(exportSegmentDetailButton, 10);
+        click(exportSegmentDetailButton);
+        isDisplayedBy(exportSFTPFTP, 5);
+        click(exportSFTPFTP);
+    }
+
+    public void exportCustomReports() {
+        isDisplayedBy(exportSegmentDetailButton, 10);
+        click(exportSegmentDetailButton);
+        isDisplayedBy(exportCustomReports, 5);
+        click(exportCustomReports);
     }
 
 

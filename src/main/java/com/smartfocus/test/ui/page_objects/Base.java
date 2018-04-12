@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+import static org.testng.FileAssert.fail;
+
 public class Base {
 
     public static WebDriver driver;
@@ -30,9 +32,11 @@ public class Base {
     }
 
 
-    public List<WebElement> findElements (By locator) {
-        return driver.findElements(locator);
+/*
+    public List<WebElement> findElements (WebElement locator) {
+        return driver.findElement(locator);
     }
+*/
 
     public void type (By locator, String inputText) {
         find(locator).sendKeys(inputText);
@@ -49,6 +53,8 @@ public class Base {
     }
 
 
+
+
     private void waitFor (ExpectedCondition<WebElement> condition, Integer timeout) {
         timeout = timeout != null ? timeout : 10;
         WebDriverWait wait = new WebDriverWait(driver, timeout);
@@ -61,12 +67,36 @@ public class Base {
         wait.until(condition);
     }
 
+    public void waitOneSecond() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException exception) {
+
+        }
+    }
+
+    public void waitThreeSeconds() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException exception) {
+
+        }
+    }
+
+    public void waitFiveSeconds() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException exception) {
+
+        }
+    }
 
     public Boolean isDisplayed(WebElement locator, int maxWaitTime) {
         try {
            waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
         } catch (org.openqa.selenium.TimeoutException exception) {
-            return false;
+            System.out.println(locator);
+            fail("Element not found or rendered. Consider extending wait time or reevaluate locator.");
         }
         return true;
     }
@@ -75,29 +105,25 @@ public class Base {
         try {
             waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
         } catch (org.openqa.selenium.TimeoutException exception) {
-            return false;
+            fail("Element not located or rendered. Consider extending wait time or reevaluate locator.");
         }
         return true;
     }
-
-
-
-
-/*    public Boolean isDisplayedE(WebElement, int maxWaitTime) {
-        try {
-            waitFor(ExpectedConditions.visibilityOf(WebElement), maxWaitTime);
-        } catch (org.openqa.selenium.TimeoutException exception) {
-            return false;
-        }
-        return true;
-    }*/
-
 
     public Boolean isDisplayedBy (By locator, int maxWaitTime){
         try {
             waitFor(ExpectedConditions.visibilityOfElementLocated(locator), maxWaitTime);
         } catch (org.openqa.selenium.TimeoutException exception) {
-            return false;
+            fail("Element not located or rendered. Consider extending wait time or reevaluate locator.");
+        }
+        return true;
+    }
+
+    public Boolean isDisplayedByWait (By locator, int maxWaitTime){
+        try {
+            waitFor(ExpectedConditions.visibilityOfElementLocated(locator), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return null;
         }
         return true;
     }
@@ -108,7 +134,7 @@ public class Base {
         try {
             waitUntil(ExpectedConditions.invisibilityOfElementLocated(locator), maxWaitTime);
         } catch (org.openqa.selenium.TimeoutException exception) {
-            return false;
+            fail("Element not located or rendered. Consider extending wait time or reevaluate locator.");
         }
         return true;
     }
@@ -119,6 +145,26 @@ public class Base {
         driver.quit();
     }
 
+
+
+/*    public Boolean isDisplayed(WebElement locator, int maxWaitTime) {
+        try {
+           waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return false;
+        }
+        return true;
+    }
+
+  public Boolean isDisplayedE(WebElement, int maxWaitTime) {
+        try {
+            waitFor(ExpectedConditions.visibilityOf(WebElement), maxWaitTime);
+        } catch (org.openqa.selenium.TimeoutException exception) {
+            return false;
+        }
+        return true;
+    }
+*/
 
 
 

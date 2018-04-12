@@ -19,7 +19,7 @@ public class AmountFilterConfig extends Base {
     By modal = By.cssSelector(".aggregated-filter-view-leadingLabel");
 
 
-    public void atMost(String value) {
+    public void atMost(int value) {
         isDisplayedBy(valueQualifier, 5);
 
         click(valueQualifier);
@@ -29,12 +29,12 @@ public class AmountFilterConfig extends Base {
 
         isDisplayedBy(valueEntryMost, 5);
         click(valueEntryMost);
-        type(valueEntryMost, value);
+        type(valueEntryMost, String.format("%d", value));
     }
 
 
 
-    public void atLeast (String value) {
+    public void atLeast (int value) {
         isDisplayedBy(valueQualifier, 5);
 
         click(valueQualifier);
@@ -44,25 +44,25 @@ public class AmountFilterConfig extends Base {
 
         isDisplayedBy(valueEntryLeast, 5);
         click(valueEntryLeast);
-        type(valueEntryLeast, value);
+        type(valueEntryLeast, String.format("%d", value));
     }
 
 
-    public void inBetween(String value1, String value2) {
+    public void inBetween(int value1, int value2) {
         isDisplayedBy(valueQualifier, 5);
 
         click(valueQualifier);
-        Select qualifier = new Select(driver.findElement(valueQualifier));
+        Select qualifier = new Select(find(valueQualifier));
         qualifier.selectByIndex(2);
         click(modal);
 
         isDisplayedBy(valueEntryBetween1, 5);
         click(valueEntryBetween1);
-        type(valueEntryBetween1, value1);
+        type(valueEntryBetween1, String.format("%d", value1));
 
         isDisplayedBy(valueEntryBetween2, 5);
         click(valueEntryBetween2);
-        type(valueEntryBetween2, value2);
+        type(valueEntryBetween2, String.format("%d", value2));
     }
 
 
@@ -87,21 +87,20 @@ public class AmountFilterConfig extends Base {
     String amountFilterText;
     String amountFilterTemplateText = "qualifier value in the selected time period.";
 
-    public Boolean amountFilterSuccess(String filter, String qualifier, String... value) {
+    public Boolean amountFilterSuccess(String filter, String qualifier, int... value) {
         String appliedFilterPattern = appliedLovFilterTemplate.replace("filterName", filter);
         By theappliedFilter = By.xpath(appliedFilterPattern);
         WebElement appliedFilter = find(theappliedFilter);
         isDisplayed(appliedFilter, 5);
         amountFilterText = appliedFilter.getText();
         if ( qualifier.equalsIgnoreCase("at least") ) {
-            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%s", value[0]));
+            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%d", value[0]));
         } else if ( qualifier.equalsIgnoreCase("at most") ) {
-            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%s", value[0]));
+            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%d", value[0]));
         } else if ( qualifier.equalsIgnoreCase("between") ) {
-            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("$%s and $%s", value[0], value[1]));
+            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("$%d and $%d", value[0], value[1]));
         }
-        System.out.println(amountFilter);
-        System.out.println(amountFilterText);
+
         if ( amountFilterText.contains(amountFilter) ) {
             return true;
         }

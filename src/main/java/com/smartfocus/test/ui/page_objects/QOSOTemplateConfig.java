@@ -87,7 +87,7 @@ public class QOSOTemplateConfig extends Base {
     String qosoAmountSecondInput = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Spend Amounts ')]/../div[2]/div[2]/input[2]";
 
 
-    public WebElement setQosoAmount(int filterGroup, int qosoOrder, String amount, String... value) {
+    public WebElement setQosoAmount(int filterGroup, int qosoOrder, String amountQualifier, int... value) {
         findAddedQOSOContainers();
 
         By foundAmountButton = By.xpath(qosoAmountButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
@@ -106,13 +106,13 @@ public class QOSOTemplateConfig extends Base {
         By foundAmountSecondInput = By.xpath(qosoAmountSecondInput.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
         WebElement amountSecondInput = find(foundAmountSecondInput);
 
-        if ( amount.equalsIgnoreCase("any quantity") ) {
+        if ( amountQualifier.equalsIgnoreCase("any quantity") ) {
             By foundAmountAnyAmount = By.xpath(qosoAmountAnyAmount.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
             WebElement amountAnyAmount = find(foundAmountAnyAmount);
             isDisplayed(amountAnyAmount, 5);
             amountAnyAmount.click();
             click(safeSpot);
-        } else if ( amount.equalsIgnoreCase("at least") ) {
+        } else if ( amountQualifier.equalsIgnoreCase("at least") ) {
             By foundAmountAtLeast = By.xpath(qosoAmountAtLeast.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
             WebElement amountAtLeast = find(foundAmountAtLeast);
             isDisplayed(amountAtLeast, 5);
@@ -120,9 +120,9 @@ public class QOSOTemplateConfig extends Base {
             isDisplayed(amountInput, 5);
             amountInput.click();
             amountInput.clear();
-            amountInput.sendKeys(value[0]);
+            amountInput.sendKeys(String.format("%d", value[0]));
             click(safeSpot);
-        } else if ( amount.equalsIgnoreCase("at most") ) {
+        } else if ( amountQualifier.equalsIgnoreCase("at most") ) {
             By foundAmountAtMost = By.xpath(qosoAmountAtMost.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
             WebElement amountAtMost = find(foundAmountAtMost);
             isDisplayed(amountAtMost, 5);
@@ -130,9 +130,9 @@ public class QOSOTemplateConfig extends Base {
             isDisplayed(amountInput, 5);
             amountInput.click();
             amountInput.clear();
-            amountInput.sendKeys(value[0]);
+            amountInput.sendKeys(String.format("%d", value[0]));
             click(safeSpot);
-        } else if ( amount.equalsIgnoreCase("between") ) {
+        } else if ( amountQualifier.equalsIgnoreCase("between") ) {
             By foundAmountBetween = By.xpath(qosoAmountBetween.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
             WebElement amountBetween = find(foundAmountBetween);
             isDisplayed(amountBetween, 5);
@@ -140,11 +140,11 @@ public class QOSOTemplateConfig extends Base {
             isDisplayed(amountInput, 5);
             amountInput.click();
             amountInput.clear();
-            amountInput.sendKeys(value[0]);
+            amountInput.sendKeys(String.format("%d", value[0]));
             isDisplayed(amountSecondInput, 5);
             amountSecondInput.click();
             amountSecondInput.clear();
-            amountSecondInput.sendKeys(value[1]);
+            amountSecondInput.sendKeys(String.format("%d", value[1]));
             click(safeSpot);
         }
         return null;
@@ -175,7 +175,7 @@ public class QOSOTemplateConfig extends Base {
     String qosoQuantityInput = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Quantities ')]/../div[2]/div[2]/input[1]";
     String qosoQuantitySecondInput = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Quantities ')]/../div[2]/div[2]/input[2]";
 
-    public WebElement setQosoQuantity(int filterGroup, int qosoOrder, String quantity, String... value) {
+    public WebElement setQosoQuantity(int filterGroup, int qosoOrder, String quantity, int... value) {
         findAddedQOSOContainers();
 
         By foundQuantityButton = By.xpath(qosoQuantityButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
@@ -208,7 +208,7 @@ public class QOSOTemplateConfig extends Base {
             isDisplayed(quantityInput, 5);
             quantityInput.click();
             quantityInput.clear();
-            quantityInput.sendKeys(value[0]);
+            quantityInput.sendKeys(String.format("%d", value[0]));
             click(safeSpot);
         } else if ( quantity.equalsIgnoreCase("at most") ) {
             By foundQuantityAtMost = By.xpath(qosoQuantityAtMost.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
@@ -218,7 +218,7 @@ public class QOSOTemplateConfig extends Base {
             isDisplayed(quantityInput, 5);
             quantityInput.click();
             quantityInput.clear();
-            quantityInput.sendKeys(value[0]);
+            quantityInput.sendKeys(String.format("%d", value[0]));
             click(safeSpot);
         } else if ( quantity.equalsIgnoreCase("between") ) {
             By foundQuantityBetween = By.xpath(qosoQuantityBetween.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
@@ -228,11 +228,11 @@ public class QOSOTemplateConfig extends Base {
             isDisplayed(quantityInput, 5);
             quantityInput.click();
             quantityInput.clear();
-            quantityInput.sendKeys(value[0]);
+            quantityInput.sendKeys(String.format("%d", value[0]));
             isDisplayed(quantitySecondInput, 5);
             quantitySecondInput.click();
             quantitySecondInput.clear();
-            quantitySecondInput.sendKeys(value[1]);
+            quantitySecondInput.sendKeys(String.format("%d", value[1]));
             click(safeSpot);
         }
         return null;
@@ -254,18 +254,6 @@ public class QOSOTemplateConfig extends Base {
         return false;
     }
 
-/*    public Boolean qosoAmountSuccess(int filterGroup, int qosoOrder, String amountAndValue) {
-        findAddedQOSOContainers();
-        By foundAmountButton = By.xpath(qosoAmountButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
-        WebElement amountButton = find(foundAmountButton);
-        isDisplayed(amountButton, 5);
-        amountValueDisplayed = amountButton.getText();
-        if ( amountValueDisplayed.equalsIgnoreCase(amountAndValue) ) {
-            return true;
-        }
-    return false;
-    }*/
-
     // Item/Product specific controls
 
     String qosoItemButton = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[2]/div[6]/span";
@@ -277,13 +265,18 @@ public class QOSOTemplateConfig extends Base {
     String qosoItemSKU = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Items ')]/../div[2]/ul/li[5]";
     String qosoItemBrand = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Items ')]/../div[2]/ul/li[6]";
 
-    String lovPattern = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), \"filterName\")]/../div[1]/i";
+
 
     @FindBy(xpath = "//div[@class='lov-area']//*[@class='form-control search-query textSelectable']")
-    public WebElement filterSearchBox;
+    public WebElement itemSearchBox;
+
+
 
     By qosoFilterSearchTextBox = By.xpath("//div[@class='lov-area']//*[@class='form-control search-query textSelectable']");
+    String filterSearchBoxTemplate = "//div[@class='modal-title available-filter' and contains(text(), \"appliedFilter\")]/../../div[3]/div[2]/div/div/div/input";
     By filterSearchtextBox = By.xpath("//div[@id='modalFilterContents']//*[@class='form-control search-query textSelectable']");
+
+    String lovPattern = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), \"filterName\")]/../div[1]/i";
 
 
     public void setQosoItems(int filterGroup, int qosoOrder, String itemLevel, String... LOVs) {
@@ -316,10 +309,10 @@ public class QOSOTemplateConfig extends Base {
                 String pattern = lovPattern.replace("filterName", lov);
                 By location = By.xpath(pattern);
 
-                isDisplayed(filterSearchBox,5);
-                filterSearchBox.click();
-                filterSearchBox.clear();
-                filterSearchBox.sendKeys(lov);
+                isDisplayed(itemSearchBox,5);
+                itemSearchBox.click();
+                itemSearchBox.clear();
+                itemSearchBox.sendKeys(lov);
 
                 WebElement filterCheck = find(location);
                 checkBoxes.add(filterCheck);
@@ -337,10 +330,10 @@ public class QOSOTemplateConfig extends Base {
                 String pattern = lovPattern.replace("filterName", lov);
                 By location = By.xpath(pattern);
 
-                isDisplayed(filterSearchBox,5);
-                filterSearchBox.click();
-                filterSearchBox.clear();
-                filterSearchBox.sendKeys(lov);
+                isDisplayed(itemSearchBox,5);
+                itemSearchBox.click();
+                itemSearchBox.clear();
+                itemSearchBox.sendKeys(lov);
 
                 WebElement filterCheck = find(location);
                 checkBoxes.add(filterCheck);
@@ -358,10 +351,10 @@ public class QOSOTemplateConfig extends Base {
                 String pattern = lovPattern.replace("filterName", lov);
                 By location = By.xpath(pattern);
 
-                isDisplayed(filterSearchBox,5);
-                filterSearchBox.click();
-                filterSearchBox.clear();
-                filterSearchBox.sendKeys(lov);
+                isDisplayed(itemSearchBox,5);
+                itemSearchBox.click();
+                itemSearchBox.clear();
+                itemSearchBox.sendKeys(lov);
 
                 WebElement filterCheck = find(location);
                 checkBoxes.add(filterCheck);
@@ -379,10 +372,10 @@ public class QOSOTemplateConfig extends Base {
                 String pattern = lovPattern.replace("filterName", lov);
                 By location = By.xpath(pattern);
 
-                isDisplayed(filterSearchBox,5);
-                filterSearchBox.click();
-                filterSearchBox.clear();
-                filterSearchBox.sendKeys(lov);
+                isDisplayed(itemSearchBox,5);
+                itemSearchBox.click();
+                itemSearchBox.clear();
+                itemSearchBox.sendKeys(lov);
 
                 WebElement filterCheck = find(location);
                 checkBoxes.add(filterCheck);
@@ -400,10 +393,10 @@ public class QOSOTemplateConfig extends Base {
                 String pattern = lovPattern.replace("filterName", lov);
                 By location = By.xpath(pattern);
 
-                isDisplayed(filterSearchBox, 5);
-                filterSearchBox.click();
-                filterSearchBox.clear();
-                filterSearchBox.sendKeys(lov);
+                isDisplayed(itemSearchBox, 5);
+                itemSearchBox.click();
+                itemSearchBox.clear();
+                itemSearchBox.sendKeys(lov);
 
                 WebElement filterCheck = find(location);
                 checkBoxes.add(filterCheck);
@@ -431,6 +424,10 @@ public class QOSOTemplateConfig extends Base {
 
         }
     }
+
+    //    String qosoItemButton = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[2]/div[6]/span";
+    String itemLovPattern = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[2]/div[6]/div[1]/div/div[2]/div[2]/div/div[4]/div/div[5]/div//*[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']";
+
 
     public Boolean checkQosoItems(int filterGroup, int qosoOrder, String itemLevel, String... labels) {
         findAddedQOSOContainers();
@@ -469,19 +466,23 @@ public class QOSOTemplateConfig extends Base {
 
 
 
-    public boolean checkQosoLovChecked(String filterGroup, String qosoOrder, String filter, String... labels) {
+    public boolean checkQosoLovChecked(int filterGroup, int qosoOrder, String filter, String... labels) {
         findAddedQOSOContainers();
-        String foundItemButton = appliedFilterTemplate.replace("group", filterGroup).replace("qosoOrderNumber",  qosoOrder).replace("appliedFilter", filter);
+        String foundItemButton = appliedFilterTemplate.replace("group", String.format("%d",filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)).replace("appliedFilter", filter);
         By theAppliedFilter = By.xpath(foundItemButton);
         WebElement appliedFilter = find(theAppliedFilter);
         doubleClick(appliedFilter);
-        isDisplayed(filterSearchBox, 5);
+        isDisplayed(itemSearchBox, 5);
 
         for (String label : labels) {
             String pattern = lovCheckedPattern.replace("lovValue", label);
             By location = By.xpath(pattern);
 
-            isDisplayedBy(filterSearchtextBox, 5);
+           String filterSearchTextBox = filterSearchBoxTemplate.replace("appliedFilter", filter);
+            By theFilterSearchTextBox = By.xpath(filterSearchTextBox);
+            WebElement searchBox = find(theFilterSearchTextBox);
+            isDisplayed(searchBox, 5);
+
 
             click(filterSearchtextBox);
             find(filterSearchtextBox).clear();
@@ -500,19 +501,22 @@ public class QOSOTemplateConfig extends Base {
 
     }
 
-    public boolean checkQosoLovNotChecked(String filterGroup, String qosoOrder, String filter, String... labels) {
+    public boolean checkQosoLovNotChecked(int filterGroup, int qosoOrder, String filter, String... labels) {
         findAddedQOSOContainers();
-        String foundItemButton = appliedFilterTemplate.replace("group", filterGroup).replace("qosoOrderNumber", qosoOrder).replace("appliedFilter",  filter);
+        String foundItemButton = appliedFilterTemplate.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)).replace("appliedFilter",  filter);
         By theAppliedFilter = By.xpath(foundItemButton);
         WebElement appliedFilter = find(theAppliedFilter);
         doubleClick(appliedFilter);
-        isDisplayed(filterSearchBox, 5);
+        isDisplayedBy(filterSearchtextBox, 5);
 
         for (String label : labels) {
             String pattern = lovNotCheckedPattern.replace("lovValue", label);
             By location = By.xpath(pattern);
 
-            isDisplayedBy(filterSearchtextBox, 5);
+            String filterSearchTextBox = filterSearchBoxTemplate.replace("appliedFilter", filter);
+            By theFilterSearchTextBox = By.xpath(filterSearchTextBox);
+            WebElement searchBox = find(theFilterSearchTextBox);
+            isDisplayed(searchBox, 5);
 
             click(filterSearchtextBox);
             find(filterSearchtextBox).clear();

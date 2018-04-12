@@ -68,11 +68,11 @@ public class assertionPracticeII extends Base{
         // First filter group: Purchase, 2 filters (values excluded in second filter)
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
-        amountFilter.inBetween(5, 1000);
+        amountFilter.inBetween(400, 1000);
         amountFilter.saveFilter();
-        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 5, 1000), "Failed to set amount(s) properly");
-
+        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 400, 1000), "Failed to set amount(s) properly");
 /*
+
 
         UtilityDragger.drag(RG.state(), RG.getDropZone(1));
         lovFilter.toggleLOV(lovFilter.getStateLovList(),"Washington", "California");
@@ -148,10 +148,12 @@ public class assertionPracticeII extends Base{
         RG.setAndOrContainerButtonAnd(3).click();
         Assert.assertTrue(RG.verifyAndOrContainerOperator(3, "And"), "And/Or button not properly set.");
 
+*/
         // Settings: All calculations on
 
         RG.settingsTab();
 
+/*
         Assert.assertTrue(settings.verifyAgeAndGenderNotEnabled(), "Age and Gender setting enabled, unexpectedly.");
         settings.toggleAgeAndGenderSettingOn();
         Assert.assertTrue(settings.verifyAgeAndGenderEnabled(), "Age and Gender setting not enabled, unexpectedly.");
@@ -167,6 +169,7 @@ public class assertionPracticeII extends Base{
         Assert.assertTrue(settings.verifyRfmNotEnabled(), "RFM setting enabled, unexpectedly.");
         settings.toggleRfmSettingOn();
         Assert.assertTrue(settings.verifyRfmEnabled(), "RFM setting not enabled, unexpectedly.");
+*/
 
         scroll.scrollToElement(settings.getAutoExportEmailToggle());
 
@@ -180,20 +183,20 @@ public class assertionPracticeII extends Base{
         settings.toggleAutoExportSFTPOn();
         Assert.assertTrue(settings.verifyAutoExportSFTPEnabled(), "Auto export to SFTP not enabled, unexpectedly.");
 
-*/
+
         //Save Segment
         RG.saveSegment();
         //Assert.assertTrue(RG.verifySegmentSavedKnownCount("388"), "People count not matching results");
         Assert.assertTrue(RG.verifySegmentSavedUnknownCount(), "People count does not match");
 
 
-        //View Summary and Calculation Options
+   /*     //View Summary and Calculation Options
 
         RG.summaryTab();
         segmentDetail.renderSummaryTab();
         Assert.assertTrue(segmentDetail.verifySummaryRendered(), "Summary graphics did not render.");
 
-  /*      segmentDetail.renderAgeAndGender();
+        segmentDetail.renderAgeAndGender();
         Assert.assertTrue(segmentDetail.verifyAgeAndGenderRendered(), "The Age and Gender chart did not render.");
 
         segmentDetail.renderTotalSpend();
@@ -203,6 +206,11 @@ public class assertionPracticeII extends Base{
         Assert.assertTrue(segmentDetail.verifyRfmRendered(), "The scorecards for RFM did not render");
 
 */
+        navigation.analyze();
+
+        Assert.assertTrue(manager.verifySegmentExportSuccess("Email", "Assertion Practice"), "Export failed.");
+        Assert.assertTrue(manager.verifySegmentExportSuccess("SFTP", "Assertion Practice"), "Export failed.");
+
 
         //Delete Segement
 
@@ -210,6 +218,13 @@ public class assertionPracticeII extends Base{
         waitThreeSeconds();
         view.selectViewableSegment("Assertion Practice");
         view.findViewableSegment("Assertion Practice");
+
+
+        navigation.analyze();
+        manager.cloneSegment("Assertion Practice", "Assertion Practice CLONE");
+        Assert.assertTrue(manager.verifySegmentPresent("Assertion Practice CLONE"));
+        manager.openSegment("Assertion Practice CLONE");
+        RG.saveSegment();
 
         try {
             Thread.sleep(3000);

@@ -1,7 +1,7 @@
 package com.smartfocus.test.ui.segment_creation;
 
 import com.smartfocus.test.ui.page_objects.*;
-import com.smartfocus.test.ui.utilities.UtilityDragger;
+import com.smartfocus.test.ui.Utilities.UtilityDragger;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.BeforeClass;
@@ -14,6 +14,7 @@ public class TestNewSegmentPractice extends Base {
 
     RefineGlobal RG;
     LOVFilterConfig lovFilter = new LOVFilterConfig();
+    Settings settings = new Settings();
     AmountFilterConfig amountFilter = new AmountFilterConfig();
     SegmentTitle editTitle = new SegmentTitle();
     SegmentDescription editDescription = new SegmentDescription();
@@ -65,8 +66,8 @@ public class TestNewSegmentPractice extends Base {
 
         }
 
-        qoso.setQosoAmount(1, 2, "between", "5", "100");
-        qoso.setQosoQuantity(1, 2, "at least", "2");
+        qoso.setQosoAmount(1, 2, "between", 5, 100);
+        qoso.setQosoQuantity(1, 2, "at least", 2);
         qoso.setQosoItems(1, 2, "department", "Women's", "Ski");
         qoso.setQosoTransactions(1, 2, "any");
 
@@ -81,7 +82,7 @@ public class TestNewSegmentPractice extends Base {
 
         UtilityDragger.drag(RG.city(), RG.getDropZone(1));
 
-        lovFilter.toggleLOV( "Seattle", "Baltimore");
+        lovFilter.toggleLOV(lovFilter.getCityLovList(), "Seattle", "Baltimore");
 
         lovFilter.saveFilter();
 
@@ -90,7 +91,7 @@ public class TestNewSegmentPractice extends Base {
 
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
-        amountFilter.inBetween("4", "500");
+        amountFilter.inBetween(4, 500);
         amountFilter.saveFilter();
 
         //qoso container practice
@@ -118,7 +119,7 @@ public class TestNewSegmentPractice extends Base {
 
         }
 
-      lovFilter.toggleLOV("Baltimore", "Seattle");
+      lovFilter.toggleLOV(lovFilter.getCityLovList(),"Baltimore", "Seattle");
 
         lovFilter.saveFilter();
 
@@ -126,8 +127,8 @@ public class TestNewSegmentPractice extends Base {
 
         RG.settingsTab();
 
-        RG.toggleAgeAndGenderSetting();
-        RG.toggleRFM();
+        settings.toggleAgeAndGenderSettingOn();
+        settings.toggleRfmSettingOn();
 
 
         //SAVE SEGMENT
@@ -218,7 +219,7 @@ public class TestNewSegmentPractice extends Base {
         navigation.analyze();
 
 
-        for (WebElement checkBox : manager.segmentList("New Segment Title")) {
+        for (WebElement checkBox : manager.segmentCheckboxList("New Segment Title")) {
             checkBox.click();
         }
 
