@@ -68,9 +68,9 @@ public class assertionPracticeII extends Base{
         // First filter group: Purchase, 2 filters (values excluded in second filter)
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
-        amountFilter.inBetween(400, 1000);
+        amountFilter.inBetween(500, 1000);
         amountFilter.saveFilter();
-        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 400, 1000), "Failed to set amount(s) properly");
+        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 500, 1000), "Failed to set amount(s) properly");
 /*
 
 
@@ -171,6 +171,7 @@ public class assertionPracticeII extends Base{
         Assert.assertTrue(settings.verifyRfmEnabled(), "RFM setting not enabled, unexpectedly.");
 */
 
+/*
         scroll.scrollToElement(settings.getAutoExportEmailToggle());
 
         Assert.assertTrue(settings.verifyAutoExportEmailNotEnabled(), "Auto Export to email already enabled, unexpectedly");
@@ -182,12 +183,15 @@ public class assertionPracticeII extends Base{
         Assert.assertTrue(settings.verifyAutoExportSFTPNotEnabled(), "Auto Export to SFTP already enabled, unexpectedly");
         settings.toggleAutoExportSFTPOn();
         Assert.assertTrue(settings.verifyAutoExportSFTPEnabled(), "Auto export to SFTP not enabled, unexpectedly.");
+*/
 
 
         //Save Segment
         RG.saveSegment();
         //Assert.assertTrue(RG.verifySegmentSavedKnownCount("388"), "People count not matching results");
         Assert.assertTrue(RG.verifySegmentSavedUnknownCount(), "People count does not match");
+
+
 
 
    /*     //View Summary and Calculation Options
@@ -206,24 +210,44 @@ public class assertionPracticeII extends Base{
         Assert.assertTrue(segmentDetail.verifyRfmRendered(), "The scorecards for RFM did not render");
 
 */
+
+        //Segment detail exports
+/*
+        RG.exportToDownload();
+        waitFiveSeconds();
+        RG.exportToEmail();
+        waitFiveSeconds();
+        RG.exportToSFTP();
+        waitFiveSeconds();
+
+
         navigation.analyze();
 
         Assert.assertTrue(manager.verifySegmentExportSuccess("Email", "Assertion Practice"), "Export failed.");
         Assert.assertTrue(manager.verifySegmentExportSuccess("SFTP", "Assertion Practice"), "Export failed.");
-
+        Assert.assertTrue(manager.verifySegmentExportSuccess("Download", "Assertion Practice"), "Export Failed");
+*/
 
         //Delete Segement
 
+/*
         navigation.view();
         waitThreeSeconds();
         view.selectViewableSegment("Assertion Practice");
         view.findViewableSegment("Assertion Practice");
+*/
 
 
         navigation.analyze();
+
+        manager.splitSegmentTwo("Assertion Practice", 50, 50);
+        Assert.assertTrue(manager.verifySegmentPresent("Assertion Practice - Split 1"), "Segment did not split or manger page failed to update");
+
         manager.cloneSegment("Assertion Practice", "Assertion Practice CLONE");
         Assert.assertTrue(manager.verifySegmentPresent("Assertion Practice CLONE"));
         manager.openSegment("Assertion Practice CLONE");
+
+
         RG.saveSegment();
 
         try {
