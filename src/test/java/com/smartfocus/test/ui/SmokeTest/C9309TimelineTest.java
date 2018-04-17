@@ -1,12 +1,13 @@
-package com.smartfocus.test.ui.sampletest;
+package com.smartfocus.test.ui.SmokeTest;
 
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.Utilities.UtilityDragger;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class TimelineTest extends Base {
+public class C9309TimelineTest extends Base {
 
     RefineGlobal RG;
     LOVFilterConfig lovFilter = new LOVFilterConfig();
@@ -34,19 +35,34 @@ public class TimelineTest extends Base {
     }
 
     @Test
-    public void timelineTest() {
+    public void C9309timelineTest() {
 
         //CHANGE TITLE AND DESCRIPTION
         RG.openTitle();
-        editTitle.newTitle("Assertion Practice");
+        editTitle.newTitle("C9309");
+        Assert.assertTrue(RG.verifySegmentTitleChange("C9309"), "Failed to update segment title properly");
+
         RG.openDescription();
-        editDescription.newDescription("New description of segment");
+        editDescription.newDescription("New description of C9309");
+        Assert.assertTrue(RG.verifySegmentDescriptionChange("New description of C9309"), "Failed to update segment title properly");
+
 
         RG.findAddedGroups();
+        Assert.assertTrue(RG.groupAdded(1, "Purchase"));
+
 
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
         amountFilter.inBetween(25, 500);
         amountFilter.saveFilter();
+        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 25, 500), "Failed to set amount(s) properly");
+
+        //Save Segment
+        RG.saveTimelineSegment();
+        //Assert.assertTrue(RG.verifySegmentSavedKnownCount("388"), "People count not matching results");
+        Assert.assertTrue(RG.verifySegmentSavedUnknownCount(), "People count does not match");
+
+
+
 
     }
 
