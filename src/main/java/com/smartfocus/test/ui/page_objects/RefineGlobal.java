@@ -3,6 +3,8 @@ package com.smartfocus.test.ui.page_objects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,11 @@ public class RefineGlobal extends Base {
     By editTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
     By editDescription = By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable");
 
+    By analyzeButton = By.xpath("//li[@class='logo_button optimize_button' or @class='logo_button optimize_button selected_product']");
 
+    public By getSaveButton() {
+        return saveButton;
+    }
 
     //save button and its dropdown elements
     By saveButton = By.cssSelector(".btn.save-update");
@@ -225,6 +231,13 @@ public class RefineGlobal extends Base {
         return templateQoso;
     }
 
+    By qosoContainerBy = By.xpath("//div[@class='available_container_items']//*[contains(text(), 'Quantity Of/Spend On Template')]");
+
+    public WebElement qosoContainerBy() {
+        WebElement foundQosoContainer =find(qosoContainerBy);
+        return foundQosoContainer;
+
+    }
 
     String filterGroupPattern = "//*[@class='applied_filter_items']/div[i]/div[2]/div[1]/ul";
 
@@ -736,7 +749,8 @@ public class RefineGlobal extends Base {
 
 
     By notCalculated = By.xpath("//div[@class='cust-count-span' and contains(text(), ' Not Yet Calculated')]");
-    By updatingCount = By.cssSelector(".progress.progress-striped.active");
+    By updatingCount = By.xpath("//div[@class='refine-status-and-save']/div[@class='refine-count-messaging']/div[@class='progress progress-striped active']");
+
     By countComplete = By.cssSelector((".cust-count-span"));
 
     public void saveSegment() {
@@ -747,6 +761,7 @@ public class RefineGlobal extends Base {
         isNotDisplayedBy(updatingCount, 150);
         isDisplayedBy(countComplete, 200);
     }
+
 
     By summarySegmentTotalPeople = By.cssSelector(".cskpi-value.cskpi-seg-total-customer-value");
 
@@ -769,12 +784,15 @@ public class RefineGlobal extends Base {
         return false;
     }
 
+    String peopleCountTemplate = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), 'segmentName')]/../../div[4]/div[1]/span";
+
     public boolean verifySegmentSavedUnknownCount() {
+        isDisplayedBy(countComplete, 240);
         waitOneSecond();
-        isDisplayedBy(countComplete, 120);
         String peopleCountText = find(countComplete).getText();
         System.out.println(peopleCountText);
         summaryTab();
+        isDisplayedBy(summarySegmentTotalPeople, 60);
         String segmentTotalPeopleText = find(summarySegmentTotalPeople).getText();
         System.out.println(segmentTotalPeopleText);
         if ( peopleCountText.contains(segmentTotalPeopleText) ) {
@@ -784,6 +802,46 @@ public class RefineGlobal extends Base {
     }
 
 
+    public void saveTimelineSegment() {
+        isDisplayedBy(saveButton, 5);
+        click(saveButton);
+        isDisplayedBy(updatingTimeline, 10);
+    }
+
+    By customerCountElement = By.xpath("//div[@class='customer-count']");
+            //customer count is from timeline detail page
+
+    By updatingTimeline = By.xpath("//div[@class='refine-count-messaging']/div[@class='progress progress-striped active']");
+
+    public boolean verifyTimelineSavedUnknownCount(String segmentName) {
+        isDisplayedBy(updatingTimeline, 10);
+        try {
+            WebElement foundUpdatingTimeline = ExpectedConditions.visibilityOfElementLocated(updatingTimeline).apply(driver);
+            while (foundUpdatingTimeline.isDisplayed()) {
+                waitThreeSeconds();
+                foundUpdatingTimeline = ExpectedConditions.visibilityOfElementLocated(updatingTimeline).apply(driver);
+            }
+        } catch (Exception e) {
+            //ignoring exception
+        }
+        waitOneSecond();
+        isDisplayedBy(summaryTab, 10);
+        click(summaryTab);
+        String customerCountString = find(customerCountElement).getText();
+        System.out.println(customerCountString);
+        isDisplayedBy(analyzeButton, 5);
+        click(analyzeButton);
+        waitOneSecond();
+        By peopleCountElement = By.xpath(peopleCountTemplate.replace("segmentName", segmentName));
+        isDisplayedBy(peopleCountElement, 30);
+        String peopleCountString = find(peopleCountElement).getText();
+        System.out.println(peopleCountString);
+
+        if ( peopleCountString.contains(customerCountString) ) {
+            return true;
+        }
+        return false;
+    }
 
     /*   public boolean groupAdded(String groupPosition, String addedFilterGroup) {
         isDisplayedBy(editTitle, 5);
@@ -813,45 +871,91 @@ public class RefineGlobal extends Base {
     public void saveExistingSegment() {
         isDisplayedBy(saveButton, 5);
         click(saveButton);
-        isDisplayedBy(saveTitleButton, 5);
-        click(saveTitleButton);
         isDisplayedBy(notCalculated, 10);
         isDisplayedBy(updatingCount, 10);
         isNotDisplayedBy(updatingCount, 150);
         isDisplayedBy(countComplete, 200);
     }
 
+    By disabledExportButton = By.xpath("//div[@class='btn dropdown-toggle trigger-export neverExported disabled']");
 
-    By exportSegmentDetailButton = By.xpath("//div[@class='btn-group segmentActionsDropDown']");
+    By exportButton = By.xpath("//div[@class='btn-group segmentActionsDropDown']");
     By exportDownload = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Download\")]");
+    By exportDownloadModalButton = By.xpath("//div[@class='titleDiv' and contains(text(), 'Export')]/../div[3]/div[1]/a[2]");
+
     By exportEmail = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Export to Smart Email\")]");
     By exportSFTPFTP = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Export To SFTP/FTP\")]");
     By exportCustomReports = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Download\")]");
 
+
     public void exportToDownload() {
-        isDisplayedBy(exportSegmentDetailButton, 10);
-        click(exportSegmentDetailButton);
+        try{
+            WebElement foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            while (foundDisabledButton.isDisplayed()) {
+                waitThreeSeconds();
+                foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            }
+        }
+        catch (Exception e) {
+            //ignoring exception
+        }
+        isDisplayedBy(exportButton, 180);
+        click(exportButton);
         isDisplayedBy(exportDownload, 5);
         click(exportDownload);
+        isDisplayedBy(exportDownloadModalButton, 10);
+        click(exportDownloadModalButton);
     }
 
     public void exportToEmail() {
-        isDisplayedBy(exportSegmentDetailButton, 10);
-        click(exportSegmentDetailButton);
+        try{
+            WebElement foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            while (foundDisabledButton.isDisplayed()) {
+                waitThreeSeconds();
+                foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            }
+        }
+        catch (Exception e) {
+            //ignoring exception
+        }
+        isDisplayedBy(exportButton, 180);
+        click(exportButton);
         isDisplayedBy(exportEmail, 5);
         click(exportEmail);
     }
 
     public void exportToSFTP() {
-        isDisplayedBy(exportSegmentDetailButton, 10);
-        click(exportSegmentDetailButton);
+        try{
+            WebElement foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            while (foundDisabledButton.isDisplayed()) {
+                waitThreeSeconds();
+                foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            }
+        }
+        catch (Exception e) {
+            //ignoring exception
+        }
+        isDisplayedBy(exportButton, 180);
+        click(exportButton);
         isDisplayedBy(exportSFTPFTP, 5);
         click(exportSFTPFTP);
+        isDisplayedBy(exportDownloadModalButton, 10);
+        click(exportDownloadModalButton);
     }
 
     public void exportCustomReports() {
-        isDisplayedBy(exportSegmentDetailButton, 10);
-        click(exportSegmentDetailButton);
+        try{
+            WebElement foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            while (foundDisabledButton.isDisplayed()) {
+                waitThreeSeconds();
+                foundDisabledButton = ExpectedConditions.visibilityOfElementLocated(disabledExportButton).apply(driver);
+            }
+        }
+        catch (Exception e) {
+            //ignoring exception
+        }
+        isDisplayedBy(exportButton, 10);
+        click(exportButton);
         isDisplayedBy(exportCustomReports, 5);
         click(exportCustomReports);
     }

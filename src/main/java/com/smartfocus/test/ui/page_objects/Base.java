@@ -55,7 +55,7 @@ public class Base {
 
 
 
-    private void waitFor (ExpectedCondition<WebElement> condition, Integer timeout) {
+    public void waitFor (ExpectedCondition<WebElement> condition, Integer timeout) {
         timeout = timeout != null ? timeout : 10;
         WebDriverWait wait = new WebDriverWait(driver, timeout);
         wait.until(condition);

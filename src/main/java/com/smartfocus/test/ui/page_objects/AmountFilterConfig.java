@@ -82,7 +82,7 @@ public class AmountFilterConfig extends Base {
         click(cancelFilterButton);
     }
 
-    String appliedLovFilterTemplate = "//div[@class='applied_filter_items']//*[contains(text(), \"filterName\")]/../div[3]";
+    String appliedLovFilterTemplate = "//div[@class='applied_filter_items']//*[contains(text(), \"filterName\")]/../div[2]";
     String amountFilter;
     String amountFilterText;
     String amountFilterTemplateText = "qualifier value in the selected time period.";

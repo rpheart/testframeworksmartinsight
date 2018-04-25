@@ -16,9 +16,11 @@ public class UtilityDragger extends Base{
 
     public static void drag(WebElement filter, WebElement group) {
         Actions action = new Actions(driver);
+        filter.isDisplayed();
         action.clickAndHold(filter);
         action.dragAndDrop(filter, group).build().perform();
     }
+
 
 
 

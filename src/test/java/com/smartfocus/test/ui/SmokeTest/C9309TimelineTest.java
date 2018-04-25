@@ -18,6 +18,8 @@ public class C9309TimelineTest extends Base {
     Analyze manager;
     SegmentChartViews segmentCharts;
     QOSOTemplateConfig qoso;
+    TimelineDetail timeline = new TimelineDetail();
+
 
 
     @BeforeClass
@@ -26,8 +28,10 @@ public class C9309TimelineTest extends Base {
         BrowserBase.startBrowser("chrome", "https://qa-sfui.themessagecloud.com");
         Logins login = new Logins();
         login.loginSidevall();
-        NewSegment custom = new NewSegment();
-        custom.newTimeline();
+
+
+
+
         RG = PageFactory.initElements(driver, RefineGlobal.class);
         manager = PageFactory.initElements(driver, Analyze.class);
         segmentCharts = PageFactory.initElements(driver, SegmentChartViews.class);
@@ -36,6 +40,12 @@ public class C9309TimelineTest extends Base {
 
     @Test
     public void C9309timelineTest() {
+
+
+        NewSegment custom = new NewSegment();
+        custom.newTimeline();
+        Assert.assertTrue(custom.verifyNewTimelineStarted(), "Failed to start a new timeline segment.");
+
 
         //CHANGE TITLE AND DESCRIPTION
         RG.openTitle();
@@ -59,8 +69,15 @@ public class C9309TimelineTest extends Base {
         //Save Segment
         RG.saveTimelineSegment();
         //Assert.assertTrue(RG.verifySegmentSavedKnownCount("388"), "People count not matching results");
-        Assert.assertTrue(RG.verifySegmentSavedUnknownCount(), "People count does not match");
+        Assert.assertTrue(RG.verifyTimelineSavedUnknownCount("C9309"), "People count does not match");
 
+        navigation.analyze();
+        manager.openSegment("C9309");
+        Assert.assertTrue(timeline.verifyCustomerCountChart(), "Chart not rendered. Timeline segment possibly broke.");
+
+        navigation.analyze();
+        manager.deleteSegment("C9309");
+        Assert.assertTrue(manager.verifySegmentDeleted("C9309"), "Segment not deleted, i.e. still visible.");
 
 
 

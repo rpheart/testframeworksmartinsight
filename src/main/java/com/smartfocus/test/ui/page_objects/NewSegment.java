@@ -5,8 +5,7 @@ import org.openqa.selenium.support.PageFactory;
 
 
 public class NewSegment extends Base {
-
-    By analyze = By.xpath("//*[@id='SFUI_Nav']/div/div/ul/li[2]");
+    By analyzeButton = By.xpath("//li[@class='logo_button optimize_button' or @class='logo_button optimize_button selected_product']");
     By create = By.className("pageTabTopBarActionCreate");
     By createCustom = By.className("customSegmentLine");
     By createTimeline = By.className("timelineSegmentLine");
@@ -15,13 +14,15 @@ public class NewSegment extends Base {
     By segmentTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
 
     String segmentTitleText;
+    String timelineTitleText;
 
 
 
     RefineGlobal RG;
 
     public void analyze(){
-        click(analyze);
+        isDisplayedBy(analyzeButton, 10);
+        click(analyzeButton);
     }
 
     public void createButton(){
@@ -34,7 +35,7 @@ public class NewSegment extends Base {
         click(createCustom);
     }
 
-    public boolean newSegmentStartSuccess() {
+    public boolean verifyNewSegmentStartStarted() {
         isDisplayedBy(segmentTitle, 5);
         segmentTitleText = driver.findElement(By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable")).getText();
         if (segmentTitleText.equalsIgnoreCase("Custom Segment")) {
@@ -46,6 +47,15 @@ public class NewSegment extends Base {
     public void createTimeline(){
         isDisplayedBy(createTimeline, 10);
         click(createTimeline);
+    }
+
+    public boolean verifyNewTimelineStarted() {
+        isDisplayedBy(segmentTitle, 10);
+        timelineTitleText = find(segmentTitle).getText();
+        if ( timelineTitleText.equalsIgnoreCase("Timeline Segment") ) {
+            return true;
+        }
+        return false;
     }
 
     public void createAffinity(){

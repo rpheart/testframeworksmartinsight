@@ -246,8 +246,8 @@ public class QOSOTemplateConfig extends Base {
         WebElement quantityButton = find(foundQuantityButton);
         isDisplayed(quantityButton, 5);
         quantityValueDisplayed = quantityButton.getText();
-        System.out.println(amountAndValue);
-        System.out.println(quantityValueDisplayed);
+/*        System.out.println(amountAndValue);
+        System.out.println(quantityValueDisplayed);*/
         if ( quantityValueDisplayed.equalsIgnoreCase(amountAndValue) ) {
             return true;
         }
@@ -408,7 +408,7 @@ public class QOSOTemplateConfig extends Base {
 
 
     String itemValuesDisplayed;
-    String appliedFilterTemplate = "//div[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[3]/ul/li/div/div[@class='available-filter' and contains (text(), 'appliedFilter')]";
+    String appliedFilterTemplate = "//div[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[3]/ul/li/div/div[2]/div[@class='available-filter' and contains (text(), 'appliedFilter')]";
     String lovCheckedPattern = "//div[@class='ui-widget-content slick-row even' or @class='ui-widget-content slick-row odd']//*[text()= \"lovValue\"]/../div[1]/i[@class = 'insightsCheckBox topOffsetSevenPx checked']";
     String lovNotCheckedPattern = "//div[@class='ui-widget-content slick-row even' or @class='ui-widget-content slick-row odd']//*[text()= \"lovValue\"]/../div[1]/i[@class = 'insightsCheckBox topOffsetSevenPx']";
     List<WebElement> checkBoxes = new ArrayList<>();
@@ -578,8 +578,8 @@ public class QOSOTemplateConfig extends Base {
         WebElement transactionButton = find(foundTransactionButton);
         isDisplayed(transactionButton, 5);
         itemValuesDisplayed = transactionButton.getText();
-        System.out.print(itemValuesDisplayed);
-        System.out.print(transactionType);
+/*        System.out.print(itemValuesDisplayed);
+        System.out.print(transactionType);*/
         if ( itemValuesDisplayed.contains(transactionType) ) {
             return true;
         }

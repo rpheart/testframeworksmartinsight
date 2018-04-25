@@ -1,9 +1,9 @@
 package com.smartfocus.test.ui.sampletest;
 
 import com.smartfocus.test.ui.Utilities.Scroll;
+import com.smartfocus.test.ui.Utilities.Settings;
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.Utilities.UtilityDragger;
-import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -27,8 +27,6 @@ public class assertionPracticeII extends Base{
     View view = new View();
 
 
-    By homePageLocator = By.id("#SFUI_home_page");
-
     @BeforeClass
     public void setUp() {
 
@@ -40,7 +38,7 @@ public class assertionPracticeII extends Base{
 
         NewSegment custom = new NewSegment();
         custom.newCustom();
-        Assert.assertTrue(custom.newSegmentStartSuccess(), "Failed to reach new Custom Segment page");
+        Assert.assertTrue(custom.verifyNewSegmentStartStarted(), "Failed to reach new Custom Segment page");
 
         RG = PageFactory.initElements(driver, RefineGlobal.class);
         manager = PageFactory.initElements(driver, Analyze.class);
@@ -172,13 +170,13 @@ public class assertionPracticeII extends Base{
 */
 
 /*
-        scroll.scrollToElement(settings.getAutoExportEmailToggle());
+        scroll.scrollToByElement(settings.getAutoExportEmailToggle());
 
         Assert.assertTrue(settings.verifyAutoExportEmailNotEnabled(), "Auto Export to email already enabled, unexpectedly");
         settings.toggleAutoExportEmailOn();
         Assert.assertTrue(settings.verifyAutoExportEmailEnabled(), "Auto export to email not enabled, unexpectedly.");
 
-        scroll.scrollToElement(settings.getAutoExportSFTPToggle());
+        scroll.scrollToByElement(settings.getAutoExportSFTPToggle());
 
         Assert.assertTrue(settings.verifyAutoExportSFTPNotEnabled(), "Auto Export to SFTP already enabled, unexpectedly");
         settings.toggleAutoExportSFTPOn();
