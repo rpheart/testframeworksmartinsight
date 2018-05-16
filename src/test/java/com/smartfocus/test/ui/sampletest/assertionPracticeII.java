@@ -4,6 +4,7 @@ import com.smartfocus.test.ui.Utilities.Scroll;
 import com.smartfocus.test.ui.Utilities.Settings;
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.Utilities.UtilityDragger;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -65,13 +66,16 @@ public class assertionPracticeII extends Base{
 
         // First filter group: Purchase, 2 filters (values excluded in second filter)
 
+        RG.manageFilterGroupRelativePeriod(1, 24, "months");
+        Assert.assertTrue(RG.verifyFilterGroupRelativePeriod(1, "24 months"));
+
         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
         amountFilter.inBetween(500, 1000);
         amountFilter.saveFilter();
         Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 500, 1000), "Failed to set amount(s) properly");
+
+
 /*
-
-
         UtilityDragger.drag(RG.state(), RG.getDropZone(1));
         lovFilter.toggleLOV(lovFilter.getStateLovList(),"Washington", "California");
         lovFilter.exclude();
@@ -79,6 +83,7 @@ public class assertionPracticeII extends Base{
         lovFilter.saveFilter();
         Assert.assertTrue(lovFilter.lovCheckedSuccess("State (Exclude)", "Washington", "California"), "Failed to check lovs properly.");
         Assert.assertTrue(lovFilter.lovNotCheckedSuccess("State (Exclude)", "Oregon"), "Failed to find element or did filter LOV is checked.");
+*/
 
         // Second filter group: People, 2 QOSO containers, 2 filters in second containers
 
@@ -128,6 +133,7 @@ public class assertionPracticeII extends Base{
         Assert.assertTrue(RG.verifyFilterGroupAndOrOperator(2, "And"), "And/Or operator not set properly");
 
 
+
         UtilityDragger.drag(RG.andOrContainer(), RG.getDropZone(3));
         Assert.assertTrue(RG.verifyAndOrContainerOperator(3, "Or"), "Wrong operator selected or not availeble, i.e. and/or container not added properly.");
 
@@ -146,7 +152,6 @@ public class assertionPracticeII extends Base{
         RG.setAndOrContainerButtonAnd(3).click();
         Assert.assertTrue(RG.verifyAndOrContainerOperator(3, "And"), "And/Or button not properly set.");
 
-*/
         // Settings: All calculations on
 
         RG.settingsTab();

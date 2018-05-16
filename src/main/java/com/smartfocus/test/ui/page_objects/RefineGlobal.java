@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,8 +170,73 @@ public class RefineGlobal extends Base {
         return false;
     }
 
-    String andOrFilterGroupOperatorTemplate = "//div[@class='applied_filter_items']/div[position]/div[1]/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains(text(), 'AndOrText')]";
 
+
+    String manageFilterGroupGearIconTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[4]/div[3]";
+    String manageFilterButtonTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[4]/div[3]/ul/li[1]";
+    String relativePeriodInputTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[4]/div[3]/ul/div/div/div[2]/ul[1]/li[2]/div[2]/div[1]/div[1]/div[1]/div[1]/input";
+    String qualifierRelativePeriodButtonTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[4]/div[3]/ul/div/div/div[2]/ul[1]/li[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/a";
+
+
+    String doneManageButtonTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[4]/div[3]/ul/div/div/div[3]/a[1]";
+
+    String relativePeriodTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[4]/div[3]/ul/div/div/div[2]/ul[1]/li[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/ul/li[z]";
+
+    public void manageFilterGroupRelativePeriod (int position, int relativeTimePeriod, String qualifier) {
+        By manageFilterGroupGearIcon = By.xpath(manageFilterGroupGearIconTemplate.replace("position", String.format("%d", position)));
+        isDisplayedBy(manageFilterGroupGearIcon, 10);
+        click(manageFilterGroupGearIcon);
+        By manageFilterButton = By.xpath(manageFilterButtonTemplate.replace("position", String.format("%d", position)));
+        isDisplayedBy(manageFilterButton, 10);
+        click(manageFilterButton);
+        waitOneSecond();
+        By relativePeriodInput = By.xpath(relativePeriodInputTemplate.replace("position", String.format("%d",position)));
+        click(relativePeriodInput);
+        find(relativePeriodInput).clear();
+        find(relativePeriodInput).sendKeys(String.format("%d", relativeTimePeriod));
+
+        By qualifierRelativePeriodButton = By.xpath(qualifierRelativePeriodButtonTemplate.replace("position", String.format("%d",position)));
+        isDisplayedBy(qualifierRelativePeriodButton, 10);
+        click(qualifierRelativePeriodButton);
+
+        if ( qualifier.equalsIgnoreCase("days") ) {
+            By relativePeriodDays = By.xpath(relativePeriodTemplate.replace("position", String.format("%d", position)).replace("z", "1"));
+            click(relativePeriodDays);
+        } else if (qualifier.equalsIgnoreCase("weeks") ) {
+            By relativePeriodWeeks = By.xpath(relativePeriodTemplate.replace("position", String.format("%d", position)).replace("z", "2"));
+            click(relativePeriodWeeks);
+        } else if (qualifier.equalsIgnoreCase("months") ) {
+            By relativePeriodMonths = By.xpath(relativePeriodTemplate.replace("position", String.format("%d", position)).replace("z", "3"));
+            click(relativePeriodMonths);
+        } else if ( qualifier.equalsIgnoreCase("years") ) {
+            By relativePeriodYears = By.xpath(relativePeriodTemplate.replace("position", String.format("%d", position)).replace("z", "4"));
+            click(relativePeriodYears);
+        }
+
+        By doneManageButton = By.xpath(doneManageButtonTemplate.replace("position", String.format("%d", position)));
+        isDisplayedBy(doneManageButton, 10);
+        click(doneManageButton);
+
+    }
+
+    String lookBackPeriodTextTemplate = "//div[@class='applied_filter_items']/div[position]/div[2]/div[1]/div/div/div[3]/span";
+
+    public Boolean verifyFilterGroupRelativePeriod(int position, String expectedValueandQualifyingRange) {
+        By lookBackPeriod = By.xpath(lookBackPeriodTextTemplate.replace("position", String.format("%d", position)));
+
+        String trimmedLookBackPeriodText = find(lookBackPeriod).getText().replace("Last ", "").replaceAll("\\(", "").replaceAll("\\)", "");
+        System.out.println(trimmedLookBackPeriodText);
+
+        if ( trimmedLookBackPeriodText.equalsIgnoreCase(expectedValueandQualifyingRange) ) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+    String andOrFilterGroupOperatorTemplate = "//div[@class='applied_filter_items']/div[position]/div[1]/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains(text(), 'AndOrText')]";
+        // THE POSITION OF THE AND/OR OPERATOR IS BASED ON ORDER OF AND/OR'S. THIS IS TO SAY, THE FIRST AND/OR OPERATOR POSITION IS BETWEEN FILTER GROUPS 1 AND 2
     public boolean verifyFilterGroupAndOrOperator(int position, String AndOr) {
         By andOrfilterGroupOperator = By.xpath(andOrFilterGroupOperatorTemplate.replace("position", String.format("%d", position + 1)).replace("AndOrText", AndOr));
         WebElement andOrWebElement = find(andOrfilterGroupOperator);
@@ -183,6 +247,8 @@ public class RefineGlobal extends Base {
         }
         return false;
     }
+
+
 
 
 
