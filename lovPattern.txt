@@ -1,0 +1,1094 @@
+diff --git a/pom.xml b/pom.xml
+index d6df8c4..24dbdc9 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -14,7 +14,7 @@
+         <maven.compiler.target>1.8</maven.compiler.target>
+         <core-version>0.0.1</core-version>
+         <testbase2-version>1.1.3</testbase2-version>
+-        <selenium-version>3.7.1</selenium-version>
++        <selenium-version>3.11.0</selenium-version>
+     </properties>
+ 
+     <dependencies>
+@@ -33,10 +33,11 @@
+             <artifactId>selenium-java</artifactId>
+             <version>${selenium-version}</version>
+         </dependency>
+- <!--       <dependency>
++<!--
++      <dependency>
+             <groupId>org.seleniumhq.selenium</groupId>
+             <artifactId>selenium-chrome-driver</artifactId>
+-            <version>2.48.2</version>
++            <version>3.10.0</version>
+         </dependency>
+ -->
+ 
+diff --git a/src/main/java/com/smartfocus/test/ui/page_objects/AmountFilterConfig.java b/src/main/java/com/smartfocus/test/ui/page_objects/AmountFilterConfig.java
+index 1c1f04f..cf0dbfd 100644
+--- a/src/main/java/com/smartfocus/test/ui/page_objects/AmountFilterConfig.java
++++ b/src/main/java/com/smartfocus/test/ui/page_objects/AmountFilterConfig.java
+@@ -19,7 +19,7 @@ public class AmountFilterConfig extends Base {
+     By modal = By.cssSelector(".aggregated-filter-view-leadingLabel");
+ 
+ 
+-    public void atMost(String value) {
++    public void atMost(int value) {
+         isDisplayedBy(valueQualifier, 5);
+ 
+         click(valueQualifier);
+@@ -29,12 +29,12 @@ public class AmountFilterConfig extends Base {
+ 
+         isDisplayedBy(valueEntryMost, 5);
+         click(valueEntryMost);
+-        type(valueEntryMost, value);
++        type(valueEntryMost, String.format("%d", value));
+     }
+ 
+ 
+ 
+-    public void atLeast (String value) {
++    public void atLeast (int value) {
+         isDisplayedBy(valueQualifier, 5);
+ 
+         click(valueQualifier);
+@@ -44,11 +44,11 @@ public class AmountFilterConfig extends Base {
+ 
+         isDisplayedBy(valueEntryLeast, 5);
+         click(valueEntryLeast);
+-        type(valueEntryLeast, value);
++        type(valueEntryLeast, String.format("%d", value));
+     }
+ 
+ 
+-    public void inBetween(String value1, String value2) {
++    public void inBetween(int value1, int value2) {
+         isDisplayedBy(valueQualifier, 5);
+ 
+         click(valueQualifier);
+@@ -58,11 +58,11 @@ public class AmountFilterConfig extends Base {
+ 
+         isDisplayedBy(valueEntryBetween1, 5);
+         click(valueEntryBetween1);
+-        type(valueEntryBetween1, value1);
++        type(valueEntryBetween1, String.format("%d", value1));
+ 
+         isDisplayedBy(valueEntryBetween2, 5);
+         click(valueEntryBetween2);
+-        type(valueEntryBetween2, value2);
++        type(valueEntryBetween2, String.format("%d", value2));
+     }
+ 
+ 
+@@ -87,18 +87,18 @@ public class AmountFilterConfig extends Base {
+     String amountFilterText;
+     String amountFilterTemplateText = "qualifier value in the selected time period.";
+ 
+-    public Boolean amountFilterSuccess(String filter, String qualifier, String... value) {
++    public Boolean amountFilterSuccess(String filter, String qualifier, int... value) {
+         String appliedFilterPattern = appliedLovFilterTemplate.replace("filterName", filter);
+         By theappliedFilter = By.xpath(appliedFilterPattern);
+         WebElement appliedFilter = find(theappliedFilter);
+         isDisplayed(appliedFilter, 5);
+         amountFilterText = appliedFilter.getText();
+         if ( qualifier.equalsIgnoreCase("at least") ) {
+-            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%s", value[0]));
++            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%d", value[0]));
+         } else if ( qualifier.equalsIgnoreCase("at most") ) {
+-            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%s", value[0]));
++            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("%d", value[0]));
+         } else if ( qualifier.equalsIgnoreCase("between") ) {
+-            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("$%s and $%s", value[0], value[1]));
++            amountFilter = amountFilterTemplateText.replace("qualifier", qualifier).replace("value", String.format("$%d and $%d", value[0], value[1]));
+         }
+         System.out.println(amountFilter);
+         System.out.println(amountFilterText);
+diff --git a/src/main/java/com/smartfocus/test/ui/page_objects/Base.java b/src/main/java/com/smartfocus/test/ui/page_objects/Base.java
+index ba5ca14..182368a 100644
+--- a/src/main/java/com/smartfocus/test/ui/page_objects/Base.java
++++ b/src/main/java/com/smartfocus/test/ui/page_objects/Base.java
+@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
+ 
+ import java.util.List;
+ 
++import static org.testng.FileAssert.fail;
++
+ public class Base {
+ 
+     public static WebDriver driver;
+@@ -30,9 +32,11 @@ public class Base {
+     }
+ 
+ 
+-    public List<WebElement> findElements (By locator) {
+-        return driver.findElements(locator);
++/*
++    public List<WebElement> findElements (WebElement locator) {
++        return driver.findElement(locator);
+     }
++*/
+ 
+     public void type (By locator, String inputText) {
+         find(locator).sendKeys(inputText);
+@@ -61,12 +65,28 @@ public class Base {
+         wait.until(condition);
+     }
+ 
++    public void waitOneSecond() {
++        try {
++            Thread.sleep(1000);
++        } catch (InterruptedException exception) {
++
++        }
++    }
++
++    public void waitThreeSeconds() {
++        try {
++            Thread.sleep(3000);
++        } catch (InterruptedException exception) {
++
++        }
++    }
+ 
+     public Boolean isDisplayed(WebElement locator, int maxWaitTime) {
+         try {
+            waitFor(ExpectedConditions.visibilityOf(locator), maxWaitTime);
+         } catch (org.openqa.selenium.TimeoutException exception) {
+-            return false;
++            System.out.println(locator);
++            fail("Element not found or rendered. Consider extending wait time or reevaluate locator.");
+         }
+         return true;
+     }
+@@ -80,24 +100,11 @@ public class Base {
+         return true;
+     }
+ 
+-
+-
+-
+-/*    public Boolean isDisplayedE(WebElement, int maxWaitTime) {
+-        try {
+-            waitFor(ExpectedConditions.visibilityOf(WebElement), maxWaitTime);
+-        } catch (org.openqa.selenium.TimeoutException exception) {
+-            return false;
+-        }
+-        return true;
+-    }*/
+-
+-
+     public Boolean isDisplayedBy (By locator, int maxWaitTime){
+         try {
+             waitFor(ExpectedConditions.visibilityOfElementLocated(locator), maxWaitTime);
+         } catch (org.openqa.selenium.TimeoutException exception) {
+-            return false;
++            fail("Element not located or rendered. Consider extending wait time or reevaluate locator.");
+         }
+         return true;
+     }
+diff --git a/src/main/java/com/smartfocus/test/ui/page_objects/LOVFilterConfig.java b/src/main/java/com/smartfocus/test/ui/page_objects/LOVFilterConfig.java
+index f5098fb..4ed0792 100644
+--- a/src/main/java/com/smartfocus/test/ui/page_objects/LOVFilterConfig.java
++++ b/src/main/java/com/smartfocus/test/ui/page_objects/LOVFilterConfig.java
+@@ -16,7 +16,6 @@ public class LOVFilterConfig extends Base {
+     By cancelFilterButton = By.cssSelector(".btn.cancelBtn.modalFilterCancel");
+     By includeToggle = By.xpath("//*[@id='modalFilterContents']//*[@class='btn btnInclude']");
+     By excludeToggle = By.xpath("//*[@id='modalFilterContents']//*[@class='btn btnExclude']");
+-    By lovList = By.xpath("//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']");
+     By filterSearchBox = By.xpath("//div[@id='modalFilterContents']//*[@class='form-control search-query textSelectable']");
+     By selectAllButton = By.xpath("//div[@id='modalFilterContents']//*[@class='selectAll']");
+     By unselectAllButton = By.xpath("//div[@id='modalFilterContents']//*[@class='unselectAll']");
+@@ -40,9 +39,13 @@ public class LOVFilterConfig extends Base {
+ 
+     }
+ 
++    String lovList = "//div[@class='modal-title available-filter' and contains(text(), \"filterName\")]/../..//*[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']";
++
++
++    public void toggleLOV(String filterName, String... labels) {
++        By lovListElement = By.xpath(lovList.replace("filterName", filterName));
++        isDisplayedBy(lovListElement, 30);
+ 
+-    public void toggleLOV(String... labels) {
+-        isDisplayedBy(lovList, 5);
+ 
+         for (String label : labels) {
+             String pattern = lovPattern.replace("lovValue", label);
+@@ -72,14 +75,15 @@ public class LOVFilterConfig extends Base {
+     }
+ 
+ 
+-
+-    public void selectAll() {
+-        isDisplayedBy(lovList, 5);
++    public void selectAll(String filterName) {
++        By lovListElement = By.xpath(lovList.replace("filterName", filterName));
++        isDisplayedBy(lovListElement, 30);
+         click(selectAllButton);
+     }
+ 
+-    public void unselectAll() {
+-        isDisplayedBy(lovList, 5);
++    public void unselectAll(String filterName) {
++        By lovListElement = By.xpath(lovList.replace("filterName", filterName));
++        isDisplayedBy(lovListElement, 30);
+         click(unselectAllButton);
+     }
+ 
+diff --git a/src/main/java/com/smartfocus/test/ui/page_objects/NewSegment.java b/src/main/java/com/smartfocus/test/ui/page_objects/NewSegment.java
+index 97a3b14..8b50846 100644
+--- a/src/main/java/com/smartfocus/test/ui/page_objects/NewSegment.java
++++ b/src/main/java/com/smartfocus/test/ui/page_objects/NewSegment.java
+@@ -12,7 +12,7 @@ public class NewSegment extends Base {
+     By createTimeline = By.className("timelineSegmentLine");
+     By createAffinity = By.className("affinityLine");
+ 
+-    By segmentTitle = By.className("refineSegmentTitle textSelectable ellipsis text-selectable");
++    By segmentTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
+ 
+     String segmentTitleText;
+ 
+diff --git a/src/main/java/com/smartfocus/test/ui/page_objects/QOSOTemplateConfig.java b/src/main/java/com/smartfocus/test/ui/page_objects/QOSOTemplateConfig.java
+index b9742ae..3d6376d 100644
+--- a/src/main/java/com/smartfocus/test/ui/page_objects/QOSOTemplateConfig.java
++++ b/src/main/java/com/smartfocus/test/ui/page_objects/QOSOTemplateConfig.java
+@@ -87,7 +87,7 @@ public class QOSOTemplateConfig extends Base {
+     String qosoAmountSecondInput = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Spend Amounts ')]/../div[2]/div[2]/input[2]";
+ 
+ 
+-    public WebElement setQosoAmount(int filterGroup, int qosoOrder, String amount, String... value) {
++    public WebElement setQosoAmount(int filterGroup, int qosoOrder, String amountQualifier, int... value) {
+         findAddedQOSOContainers();
+ 
+         By foundAmountButton = By.xpath(qosoAmountButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+@@ -106,13 +106,13 @@ public class QOSOTemplateConfig extends Base {
+         By foundAmountSecondInput = By.xpath(qosoAmountSecondInput.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+         WebElement amountSecondInput = find(foundAmountSecondInput);
+ 
+-        if ( amount.equalsIgnoreCase("any quantity") ) {
++        if ( amountQualifier.equalsIgnoreCase("any quantity") ) {
+             By foundAmountAnyAmount = By.xpath(qosoAmountAnyAmount.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+             WebElement amountAnyAmount = find(foundAmountAnyAmount);
+             isDisplayed(amountAnyAmount, 5);
+             amountAnyAmount.click();
+             click(safeSpot);
+-        } else if ( amount.equalsIgnoreCase("at least") ) {
++        } else if ( amountQualifier.equalsIgnoreCase("at least") ) {
+             By foundAmountAtLeast = By.xpath(qosoAmountAtLeast.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+             WebElement amountAtLeast = find(foundAmountAtLeast);
+             isDisplayed(amountAtLeast, 5);
+@@ -120,9 +120,9 @@ public class QOSOTemplateConfig extends Base {
+             isDisplayed(amountInput, 5);
+             amountInput.click();
+             amountInput.clear();
+-            amountInput.sendKeys(value[0]);
++            amountInput.sendKeys(String.format("%d", value[0]));
+             click(safeSpot);
+-        } else if ( amount.equalsIgnoreCase("at most") ) {
++        } else if ( amountQualifier.equalsIgnoreCase("at most") ) {
+             By foundAmountAtMost = By.xpath(qosoAmountAtMost.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+             WebElement amountAtMost = find(foundAmountAtMost);
+             isDisplayed(amountAtMost, 5);
+@@ -130,9 +130,9 @@ public class QOSOTemplateConfig extends Base {
+             isDisplayed(amountInput, 5);
+             amountInput.click();
+             amountInput.clear();
+-            amountInput.sendKeys(value[0]);
++            amountInput.sendKeys(String.format("%d", value[0]));
+             click(safeSpot);
+-        } else if ( amount.equalsIgnoreCase("between") ) {
++        } else if ( amountQualifier.equalsIgnoreCase("between") ) {
+             By foundAmountBetween = By.xpath(qosoAmountBetween.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+             WebElement amountBetween = find(foundAmountBetween);
+             isDisplayed(amountBetween, 5);
+@@ -140,11 +140,11 @@ public class QOSOTemplateConfig extends Base {
+             isDisplayed(amountInput, 5);
+             amountInput.click();
+             amountInput.clear();
+-            amountInput.sendKeys(value[0]);
++            amountInput.sendKeys(String.format("%d", value[0]));
+             isDisplayed(amountSecondInput, 5);
+             amountSecondInput.click();
+             amountSecondInput.clear();
+-            amountSecondInput.sendKeys(value[1]);
++            amountSecondInput.sendKeys(String.format("%d", value[1]));
+             click(safeSpot);
+         }
+         return null;
+@@ -175,7 +175,7 @@ public class QOSOTemplateConfig extends Base {
+     String qosoQuantityInput = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Quantities ')]/../div[2]/div[2]/input[1]";
+     String qosoQuantitySecondInput = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Quantities ')]/../div[2]/div[2]/input[2]";
+ 
+-    public WebElement setQosoQuantity(int filterGroup, int qosoOrder, String quantity, String... value) {
++    public WebElement setQosoQuantity(int filterGroup, int qosoOrder, String quantity, int... value) {
+         findAddedQOSOContainers();
+ 
+         By foundQuantityButton = By.xpath(qosoQuantityButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+@@ -208,7 +208,7 @@ public class QOSOTemplateConfig extends Base {
+             isDisplayed(quantityInput, 5);
+             quantityInput.click();
+             quantityInput.clear();
+-            quantityInput.sendKeys(value[0]);
++            quantityInput.sendKeys(String.format("%d", value[0]));
+             click(safeSpot);
+         } else if ( quantity.equalsIgnoreCase("at most") ) {
+             By foundQuantityAtMost = By.xpath(qosoQuantityAtMost.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+@@ -218,7 +218,7 @@ public class QOSOTemplateConfig extends Base {
+             isDisplayed(quantityInput, 5);
+             quantityInput.click();
+             quantityInput.clear();
+-            quantityInput.sendKeys(value[0]);
++            quantityInput.sendKeys(String.format("%d", value[0]));
+             click(safeSpot);
+         } else if ( quantity.equalsIgnoreCase("between") ) {
+             By foundQuantityBetween = By.xpath(qosoQuantityBetween.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+@@ -228,11 +228,11 @@ public class QOSOTemplateConfig extends Base {
+             isDisplayed(quantityInput, 5);
+             quantityInput.click();
+             quantityInput.clear();
+-            quantityInput.sendKeys(value[0]);
++            quantityInput.sendKeys(String.format("%d", value[0]));
+             isDisplayed(quantitySecondInput, 5);
+             quantitySecondInput.click();
+             quantitySecondInput.clear();
+-            quantitySecondInput.sendKeys(value[1]);
++            quantitySecondInput.sendKeys(String.format("%d", value[1]));
+             click(safeSpot);
+         }
+         return null;
+@@ -277,7 +277,7 @@ public class QOSOTemplateConfig extends Base {
+     String qosoItemSKU = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Items ')]/../div[2]/ul/li[5]";
+     String qosoItemBrand = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]//div[@class='popupLabel' and contains (text(), ' Items ')]/../div[2]/ul/li[6]";
+ 
+-    String lovPattern = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), \"filterName\")]/../div[1]/i";
++
+ 
+     @FindBy(xpath = "//div[@class='lov-area']//*[@class='form-control search-query textSelectable']")
+     public WebElement filterSearchBox;
+@@ -285,6 +285,8 @@ public class QOSOTemplateConfig extends Base {
+     By qosoFilterSearchTextBox = By.xpath("//div[@class='lov-area']//*[@class='form-control search-query textSelectable']");
+     By filterSearchtextBox = By.xpath("//div[@id='modalFilterContents']//*[@class='form-control search-query textSelectable']");
+ 
++    String itemLovPattern = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[2]/div[6]/div[1]/div/div[2]/div[2]/div/div[4]/div/div[5]/div//*[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']";
++
+ 
+     public void setQosoItems(int filterGroup, int qosoOrder, String itemLevel, String... LOVs) {
+         findAddedQOSOContainers();
+@@ -313,7 +315,7 @@ public class QOSOTemplateConfig extends Base {
+ 
+             List<WebElement> checkBoxes = new ArrayList<>();
+             for (String lov : LOVs) {
+-                String pattern = lovPattern.replace("filterName", lov);
++                String pattern = itemLovPattern.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder).replace("filterName", lov));
+                 By location = By.xpath(pattern);
+ 
+                 isDisplayed(filterSearchBox,5);
+@@ -334,7 +336,7 @@ public class QOSOTemplateConfig extends Base {
+ 
+             List<WebElement> checkBoxes = new ArrayList<>();
+             for (String lov : LOVs) {
+-                String pattern = lovPattern.replace("filterName", lov);
++                String pattern = itemLovPattern.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder).replace("filterName", lov));
+                 By location = By.xpath(pattern);
+ 
+                 isDisplayed(filterSearchBox,5);
+@@ -355,7 +357,7 @@ public class QOSOTemplateConfig extends Base {
+ 
+             List<WebElement> checkBoxes = new ArrayList<>();
+             for (String lov : LOVs) {
+-                String pattern = lovPattern.replace("filterName", lov);
++                String pattern = itemLovPattern.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder).replace("filterName", lov));
+                 By location = By.xpath(pattern);
+ 
+                 isDisplayed(filterSearchBox,5);
+@@ -376,7 +378,7 @@ public class QOSOTemplateConfig extends Base {
+ 
+             List<WebElement> checkBoxes = new ArrayList<>();
+             for (String lov : LOVs) {
+-                String pattern = lovPattern.replace("filterName", lov);
++                String pattern = itemLovPattern.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder).replace("filterName", lov));
+                 By location = By.xpath(pattern);
+ 
+                 isDisplayed(filterSearchBox,5);
+@@ -397,7 +399,7 @@ public class QOSOTemplateConfig extends Base {
+ 
+             List<WebElement> checkBoxes = new ArrayList<>();
+             for (String lov : LOVs) {
+-                String pattern = lovPattern.replace("filterName", lov);
++                String pattern = itemLovPattern.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder).replace("filterName", lov));
+                 By location = By.xpath(pattern);
+ 
+                 isDisplayed(filterSearchBox, 5);
+@@ -432,6 +434,9 @@ public class QOSOTemplateConfig extends Base {
+         }
+     }
+ 
++    //    String qosoItemButton = "//*[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[2]/div[6]/span";
++
++
+     public Boolean checkQosoItems(int filterGroup, int qosoOrder, String itemLevel, String... labels) {
+         findAddedQOSOContainers();
+         By foundItemButton = By.xpath(qosoItemButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+@@ -469,9 +474,9 @@ public class QOSOTemplateConfig extends Base {
+ 
+ 
+ 
+-    public boolean checkQosoLovChecked(String filterGroup, String qosoOrder, String filter, String... labels) {
++    public boolean checkQosoLovChecked(int filterGroup, String qosoOrder, String filter, String... labels) {
+         findAddedQOSOContainers();
+-        String foundItemButton = appliedFilterTemplate.replace("group", filterGroup).replace("qosoOrderNumber",  qosoOrder).replace("appliedFilter", filter);
++        String foundItemButton = appliedFilterTemplate.replace("group", String.format("%d",filterGroup)).replace("qosoOrderNumber",  qosoOrder).replace("appliedFilter", filter);
+         By theAppliedFilter = By.xpath(foundItemButton);
+         WebElement appliedFilter = find(theAppliedFilter);
+         doubleClick(appliedFilter);
+@@ -500,9 +505,9 @@ public class QOSOTemplateConfig extends Base {
+ 
+     }
+ 
+-    public boolean checkQosoLovNotChecked(String filterGroup, String qosoOrder, String filter, String... labels) {
++    public boolean checkQosoLovNotChecked(int filterGroup, String qosoOrder, String filter, String... labels) {
+         findAddedQOSOContainers();
+-        String foundItemButton = appliedFilterTemplate.replace("group", filterGroup).replace("qosoOrderNumber", qosoOrder).replace("appliedFilter",  filter);
++        String foundItemButton = appliedFilterTemplate.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", qosoOrder).replace("appliedFilter",  filter);
+         By theAppliedFilter = By.xpath(foundItemButton);
+         WebElement appliedFilter = find(theAppliedFilter);
+         doubleClick(appliedFilter);
+diff --git a/src/main/java/com/smartfocus/test/ui/page_objects/RefineGlobal.java b/src/main/java/com/smartfocus/test/ui/page_objects/RefineGlobal.java
+index 6966faa..c1dd209 100644
+--- a/src/main/java/com/smartfocus/test/ui/page_objects/RefineGlobal.java
++++ b/src/main/java/com/smartfocus/test/ui/page_objects/RefineGlobal.java
+@@ -18,9 +18,7 @@ public class RefineGlobal extends Base {
+     By editTitle = By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable");
+     By editDescription = By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable");
+ 
+-    By notCalculated = By.cssSelector("//div[@class='cust-count-span' and contains(text(), ' Not Yet Calculated')]");
+-    By updatingCount = By.cssSelector(".progress.progress-striped.active");
+-    By countComplete = By.cssSelector((".cust-count-span"));
++
+ 
+     //save button and its dropdown elements
+     By saveButton = By.cssSelector(".btn.save-update");
+@@ -42,13 +40,7 @@ public class RefineGlobal extends Base {
+     By totalSpendCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Total Spend by Product')]");
+     By rfmCalculationsTab = By.xpath("//div[@class='underline' and contains (text(), 'Segment RFM')]");
+ 
+-    //SETTINGS TOGGLE CONTROLS
+ 
+-    By lockedSegmentToggle = By.xpath("//*[@class='locked-segment']/div/div");
+-    By workGroupToggle = By.xpath("//*[@class='grouped-segmentation']/div/div");
+-    By ageAndGenderToggle = By.xpath("//*[@class='generate-demo']/div/div");
+-    By totalSpendToggle = By.xpath("//*[@class='generate-product']/div/div");
+-    By rfmToggle = By.xpath("//*[@class='generate-rfm']/div/div");
+ 
+     //LOV ASSERTION CONTROLS
+     By lovList = By.xpath("//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']");
+@@ -161,6 +153,7 @@ public class RefineGlobal extends Base {
+         return fg;
+     }
+ 
++
+     public boolean groupAdded(String groupPosition, String addedFilterGroup) {
+         isDisplayedBy(editTitle, 5);
+         String appliedGroupPattern = addedGroupTemplate.replace("position", groupPosition).replace("filterGroupType", addedFilterGroup);
+@@ -172,6 +165,21 @@ public class RefineGlobal extends Base {
+         return false;
+     }
+ 
++    String andOrFilterGroupOperatorTemplate = "//div[@class='applied_filter_items']/div[position]/div[1]/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains(text(), 'AndOrText')]";
++
++    public boolean verifyFilterGroupAndOrOperator(int position, String AndOr) {
++        By andOrfilterGroupOperator = By.xpath(andOrFilterGroupOperatorTemplate.replace("position", String.format("%d", position + 1)).replace("AndOrText", AndOr));
++        WebElement andOrWebElement = find(andOrfilterGroupOperator);
++        String andOrOperatorText = andOrWebElement.getText();
++
++        if ( AndOr.equalsIgnoreCase(andOrOperatorText) ) {
++            return true;
++        }
++        return false;
++    }
++
++
++
+ //ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS   ADD FILTERS
+ 
+     @FindBy(xpath = "//div[@class='available_container_items']//*[contains(text(), 'And/Or Template')]")
+@@ -182,57 +190,30 @@ public class RefineGlobal extends Base {
+         return templateAndOr;
+     }
+ 
+-    public WebElement andOrButtonAnd(int position) {
++    public WebElement setAndOrContainerButtonAnd(int position) {
+         WebElement andButton = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[1]"));
+         return andButton;
+     }
+ 
+-    public WebElement andOrButtonOR (int position) {
++    public WebElement setAndOrContainerButtonOr(int position) {
+         WebElement dropZone = groups.get(position-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + position + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[2]"));
+         return dropZone;
+     }
+ 
+-    String itemValuesDisplayed;
+-    String appliedFilterTemplate = "//div[@class='applied_filter_items']/div[group]/div[2]/div[1]/ul/li[qosoOrderNumber]/div[3]/ul/li/div/div[@class='available-filter' and contains (text(), 'appliedFilter')]";
+-    String lovCheckedPattern = "//div[@class='ui-widget-content slick-row even' or @class='ui-widget-content slick-row odd']//*[text()= \"lovValue\"]/../div[1]/i[@class = 'insightsCheckBox topOffsetSevenPx checked']";
+-
+-    String orEnabledContainer= "//div[@class='child-rule-container-header']/div";
+-    String andEnabledContainer ="";
+-
+-    boolean verifyAndOrContainer(int filterGroup, String AndOr) {
+-        WebElement andButton = groups.get(filterGroup-1).findElement(By.xpath("//*[@class='applied_filter_items']/div[" + filterGroup + "]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains text, 'AndOr']"));
+ 
++    String andOrEnabledContainer= "//*[@class='applied_filter_items']/div[position]/div[2]/div[1]/ul/li/div[3]/div/div/div/button[@class='btn btn-default btnAndOr btnAndOrText active' and contains(text(), 'AndOrText')]";
++    String enabledButtonText;
+ 
++    public boolean verifyAndOrContainerOperator(int filterGroup, String AndOr) {
++        By foundAndORButton = By.xpath(andOrEnabledContainer.replace("position", String.format("%d", filterGroup)).replace("AndOrText", AndOr));
++        WebElement foundAndOrButton = find(foundAndORButton);
++        isDisplayed(foundAndOrButton, 5);
++        enabledButtonText = find(foundAndORButton).getText();
++       if ( enabledButtonText.equalsIgnoreCase(AndOr) ) {
++           return true;
++       }
+         return false;
+     }
+-    /*        findAddedQOSOContainers();
+-        By foundItemButton = By.xpath(qosoItemButton.replace("group", String.format("%d", filterGroup)).replace("qosoOrderNumber", String.format("%d", qosoOrder)));
+-        WebElement itemButton = find(foundItemButton);
+-        isDisplayed(itemButton, 5);
+-        itemValuesDisplayed = itemButton.getText();
+-        itemButton.click();
+-
+-        if ( !itemValuesDisplayed.contains(itemLevel) ) {
+-            return false;
+-        }
+-
+-        for (String label : labels) {
+-            String pattern = lovCheckedPattern.replace("lovValue", label);
+-            By location = By.xpath(pattern);
+-
+-            isDisplayedBy(qosoFilterSearchTextBox, 5);
+-
+-            click(qosoFilterSearchTextBox);
+-            find(qosoFilterSearchTextBox).clear();
+-            find(qosoFilterSearchTextBox).sendKeys(label);
+-
+-            WebElement filterCheck = find(location);
+-            checkBoxes.add(filterCheck);
+-            filterCheck.getText();
+-
+-            if ( !filterCheck.isDisplayed() ) {
+-                return false;
+-            }*/
+ 
+ 
+ 
+@@ -278,7 +259,7 @@ public class RefineGlobal extends Base {
+         click(editTitle);
+     }
+ 
+-    public boolean segmentTitleChangeSuccess(String newTitle) {
++    public boolean verifySegmentTitleChange(String newTitle) {
+         isDisplayedBy(editTitle, 5);
+         segmentTitleText = driver.findElement(By.cssSelector(".refineSegmentTitle.textSelectable.ellipsis.text-selectable")).getText();
+         if (segmentTitleText.equalsIgnoreCase(newTitle)) {
+@@ -292,7 +273,7 @@ public class RefineGlobal extends Base {
+         click(editDescription);
+     }
+ 
+-    public boolean segmentDescriptionChangeSuccess(String newDescription) {
++    public boolean verifySegmentDescriptionChange(String newDescription) {
+         isDisplayedBy(editTitle, 5);
+         segmentDescriptionText = driver.findElement(By.cssSelector(".refineSegmentDescription.textSelectable.ellipsis.text-selectable")).getText();
+         if (segmentDescriptionText.equalsIgnoreCase(newDescription)) {
+@@ -753,6 +734,17 @@ public class RefineGlobal extends Base {
+ 
+     //SETTINGS TOGGLES, SETTINGS TOGGLES,SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES, SETTINGS TOGGLES,
+ 
++    //SETTINGS TOGGLE CONTROLS
++
++    By lockedSegmentToggle = By.xpath("//*[@class='locked-segment']/div/div");
++    By workGroupToggle = By.xpath("//*[@class='grouped-segmentation']/div/div");
++    By ageAndGenderToggle = By.xpath("//*[@class='generate-demo']/div/div");
++    By ageAndGenderEnabled = By.xpath("//*[@data-type='generate-demo']/div[@class='slide-toggle-box on']");
++    By totalSpendToggle = By.xpath("//*[@class='generate-product']/div/div");
++    By totalSpendEnabled = By.xpath("//*[@data-type='generate-product']/div[@class='slide-toggle-box on']");
++    By rfmToggle = By.xpath("//*[@class='generate-rfm']/div/div");
++    By rfmEnabled = By.xpath("//*[@data-type='generate-rfm']/div[@class='slide-toggle-box on']");
++
+     public void toggleLockSetting() {
+         isDisplayedBy(lockedSegmentToggle, 5);
+         click(lockedSegmentToggle);
+@@ -763,22 +755,99 @@ public class RefineGlobal extends Base {
+         click(workGroupToggle);
+     }
+ 
+-    public void toggleAgeAndGenderSetting() {
++    public void toggleAgeAndGenderSettingOn() {
++        isDisplayedBy(ageAndGenderToggle, 5);
++        if ( !isDisplayedBy(ageAndGenderEnabled, 5) ) {
++            click(ageAndGenderToggle);
++        }
++    }
++
++    public void toggleAgeAndGenderSettingOff() {
+         isDisplayedBy(ageAndGenderToggle, 5);
+-        click(ageAndGenderToggle);
++        if ( isDisplayedBy(ageAndGenderEnabled, 5) ) {
++            click(ageAndGenderToggle);
++        }
+     }
+ 
+-    public void toggleTotalSpendSetting() {
+-        isDisplayedBy(totalSpendToggle,5);
+-        click(totalSpendToggle);
++    public boolean verifyAgeAndGenderEnabled() {
++        if ( isDisplayedBy(ageAndGenderEnabled, 5) ) {
++            return true;
++        }
++        return false;
+     }
+ 
+-    public void toggleRFM() {
++    public boolean verifyAgeAndGenderNotEnabled() {
++        if ( !isDisplayedBy(ageAndGenderEnabled, 5) ) {
++            return true;
++        }
++        return false;
++    }
++
++
++    public void toggleTotalSpendSettingOn() {
++        isDisplayedBy(totalSpendToggle, 5);
++        if (!isDisplayedBy(totalSpendEnabled, 5) ) {
++            click(totalSpendToggle);
++        }
++    }
++
++    public void toggleTotalSpendSettingOff() {
++        isDisplayedBy(totalSpendToggle, 5);
++        if ( isDisplayedBy(totalSpendEnabled, 5) ) {
++            click(totalSpendToggle);
++        }
++    }
++
++    public boolean verifyTotalSpendEnabled() {
++        if ( isDisplayedBy(totalSpendEnabled, 5) ) {
++            return true;
++        }
++        return false;
++    }
++
++    public boolean verifyTotalSpendNotEnabled() {
++        if ( !isDisplayedBy(totalSpendEnabled, 5) ) {
++            return true;
++        }
++        return false;
++    }
++
++
++    public void toggleRfmSettingOn() {
++        isDisplayedBy(rfmToggle, 5);
++        if ( !isDisplayedBy(rfmEnabled, 5) ) {
++            click(rfmToggle);
++        }
++    }
++
++    public void toggleRfmSettingOff() {
+         isDisplayedBy(rfmToggle, 5);
+-        click(rfmToggle);
++        if ( isDisplayedBy(rfmEnabled, 5) ) {
++            click(rfmToggle);
++        }
+     }
+ 
+ 
++    public boolean verifyRfmEnabled() {
++        if ( isDisplayedBy(rfmEnabled, 5) ) {
++            return true;
++        }
++        return false;
++    }
++
++    public boolean verifyRfmNotEnabled() {
++        if ( !isDisplayedBy(rfmEnabled, 5) ) {
++            return true;
++        }
++        return false;
++    }
++
++
++
++    By notCalculated = By.xpath("//div[@class='cust-count-span' and contains(text(), ' Not Yet Calculated')]");
++    By updatingCount = By.cssSelector(".progress.progress-striped.active");
++    By countComplete = By.cssSelector((".cust-count-span"));
++
+     public void saveSegment() {
+         isDisplayedBy(saveButton, 5);
+         click(saveButton);
+@@ -788,6 +857,67 @@ public class RefineGlobal extends Base {
+         isDisplayedBy(countComplete, 200);
+     }
+ 
++    By summarySegmentTotalPeople = By.cssSelector(".cskpi-value.cskpi-seg-total-customer-value");
++
++    public boolean verifySegmentSavedKnownCount(String peopleCount) {
++        isDisplayedBy(countComplete, 120);
++        String peopleCountText = find(countComplete).getText();
++        System.out.println(peopleCountText);
++        if ( peopleCountText.contains(peopleCount) ) {
++
++            return true;
++        }
++
++        summaryTab();
++        String segmentTotalPeopleText = find(summarySegmentTotalPeople).getText();
++        System.out.println(segmentTotalPeopleText);
++        if ( segmentTotalPeopleText.equalsIgnoreCase(peopleCount) ) {
++            return true;
++        }
++
++        return false;
++    }
++
++    public boolean verifySegmentSavedUnknownCount() {
++        isDisplayedBy(countComplete, 120);
++        String peopleCountText = find(countComplete).getText();
++        System.out.println(peopleCountText);
++        summaryTab();
++        String segmentTotalPeopleText = find(summarySegmentTotalPeople).getText();
++        System.out.println(segmentTotalPeopleText);
++        if ( peopleCountText.contains(segmentTotalPeopleText) ) {
++            return true;
++        }
++        return false;
++    }
++
++
++
++    /*   public boolean groupAdded(String groupPosition, String addedFilterGroup) {
++        isDisplayedBy(editTitle, 5);
++        String appliedGroupPattern = addedGroupTemplate.replace("position", groupPosition).replace("filterGroupType", addedFilterGroup);
++        appliedGroupText = driver.findElement(By.xpath(appliedGroupPattern)).getText();
++
++        if ( appliedGroupText.contains(addedFilterGroup) ) {
++            return true;
++        }
++        return false;
++    }
++
++    String andOrFilterGroupOperatorTemplate = "//div[@class='applied_filter_items']/div[position]/div[1]/div/button[@class='btn btn-default btnAndOr btnAnd active' and contains(text(), 'AndOrText')]";
++
++    public boolean verifyFilterGroupAndOrOperator(int position, String AndOr) {
++        By andOrfilterGroupOperator = By.xpath(andOrFilterGroupOperatorTemplate.replace("position", String.format("%d", position + 1)).replace("AndOrText", AndOr));
++        WebElement andOrWebElement = find(andOrfilterGroupOperator);
++        String andOrOperatorText = andOrWebElement.getText();
++
++        if ( AndOr.equalsIgnoreCase(andOrOperatorText) ) {
++            return true;
++        }
++        return false;
++    }
++*/
++
+     public void saveExistingSegment() {
+         isDisplayedBy(saveButton, 5);
+         click(saveButton);
+diff --git a/src/test/java/com/smartfocus/test/ui/sampletest/TimelineTest.java b/src/test/java/com/smartfocus/test/ui/sampletest/TimelineTest.java
+index dd33092..a714794 100644
+--- a/src/test/java/com/smartfocus/test/ui/sampletest/TimelineTest.java
++++ b/src/test/java/com/smartfocus/test/ui/sampletest/TimelineTest.java
+@@ -46,7 +46,7 @@ public class TimelineTest extends Base {
+         RG.findAddedGroups();
+ 
+         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
+-        amountFilter.inBetween("25", "500");
++        amountFilter.inBetween(25, 500);
+         amountFilter.saveFilter();
+ 
+     }
+diff --git a/src/test/java/com/smartfocus/test/ui/sampletest/assertionPractice.java b/src/test/java/com/smartfocus/test/ui/sampletest/assertionPractice.java
+index da5fc24..394b3ea 100644
+--- a/src/test/java/com/smartfocus/test/ui/sampletest/assertionPractice.java
++++ b/src/test/java/com/smartfocus/test/ui/sampletest/assertionPractice.java
+@@ -49,7 +49,7 @@ public class assertionPractice extends Base{
+         // First filter group: Purchase, 2 filters (values excluded in second filter)
+ 
+         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
+-        amountFilter.inBetween("5", "1000");
++        amountFilter.inBetween(5, 1000);
+         amountFilter.saveFilter();
+ 
+         UtilityDragger.drag(RG.state(), RG.getDropZone(1));
+@@ -63,19 +63,19 @@ public class assertionPractice extends Base{
+         RG.addPeopleGroup();
+ 
+         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
+-        qoso.setQosoAmount(2, 1, "between", "5", "100");
+-        qoso.setQosoQuantity(2, 1, "at least", "2");
++        qoso.setQosoAmount(2, 1, "between", 5, 100);
++        qoso.setQosoQuantity(2, 1, "at least", 2);
+         qoso.setQosoItems(2, 1, "department", "Accessories", "Clothing Accessories", "Women's", "Men's", "Ski");
+         qoso.setQosoTransactions(2, 1, "all");
+ 
+         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
+-        qoso.setQosoAmount(2, 2, "at most", "500");
+-        qoso.setQosoQuantity(2, 2, "between", "2", "40");
++        qoso.setQosoAmount(2, 2, "at most", 500);
++        qoso.setQosoQuantity(2, 2, "between", 2, 40);
+         qoso.setQosoItems(2, 2, "category", "Accessories", "Accessories Misc", "Women's Shoes", "Women's Casual Shirts", "Men's Footwear", "Men's Casual Shirts", "Socks");
+         qoso.setQosoTransactions(2, 2, "any");
+ 
+         UtilityDragger.drag(RG.ageRange(), qoso.getQOSODropZone(2, 2));
+-        lovFilter.selectAll();
++        lovFilter.selectAll("Age Range");
+         lovFilter.toggleLOV( "18-20", "21-24");
+         lovFilter.saveFilter();
+ 
+@@ -91,24 +91,24 @@ public class assertionPractice extends Base{
+         UtilityDragger.drag(RG.andOrContainer(), RG.getDropZone(3));
+ 
+         UtilityDragger.drag(RG.department(), RG.getBottomDropZone(3));
+-        lovFilter.selectAll();
++        lovFilter.selectAll("Department");
+         lovFilter.toggleLOV("Camp", "Climb");
+         lovFilter.saveFilter();
+ 
+         UtilityDragger.drag(RG.category(), RG.getTopDropZone(3));
+-        lovFilter.selectAll();
++        lovFilter.selectAll("Category");
+         lovFilter.toggleLOV("Camp Misc", "Daypacks");
+         lovFilter.saveFilter();
+ 
+-        RG.andOrButtonAnd(3).click();
++        RG.setAndOrContainerButtonAnd(3).click();
+ 
+ 
+         // Settings: All calculations on
+ 
+         RG.settingsTab();
+-        RG.toggleAgeAndGenderSetting();
+-        RG.toggleTotalSpendSetting();
+-        RG.toggleRFM();
++        RG.toggleAgeAndGenderSettingOn();
++        RG.toggleTotalSpendSettingOn();
++        RG.toggleRfmSettingOn();
+ 
+ 
+         //Save Segment
+diff --git a/src/test/java/com/smartfocus/test/ui/sampletest/assertionPracticeII.java b/src/test/java/com/smartfocus/test/ui/sampletest/assertionPracticeII.java
+index 6309834..fc8efd7 100644
+--- a/src/test/java/com/smartfocus/test/ui/sampletest/assertionPracticeII.java
++++ b/src/test/java/com/smartfocus/test/ui/sampletest/assertionPracticeII.java
+@@ -49,11 +49,11 @@ public class assertionPracticeII extends Base{
+         //CHANGE TITLE AND DESCRIPTION
+         RG.openTitle();
+         editTitle.newTitle("Assertion Practice");
+-        Assert.assertTrue(RG.segmentTitleChangeSuccess("Assertion Practice"), "Failed to update segment title properly");
++        Assert.assertTrue(RG.verifySegmentTitleChange("Assertion Practice"), "Failed to update segment title properly");
+ 
+         RG.openDescription();
+         editDescription.newDescription("New description of segment");
+-        Assert.assertTrue(RG.segmentDescriptionChangeSuccess("New description of Segment"), "Failed to update segment title properly");
++        Assert.assertTrue(RG.verifySegmentDescriptionChange("New description of Segment"), "Failed to update segment title properly");
+ 
+         RG.findAddedGroups();
+         Assert.assertTrue(RG.groupAdded("1", "Purchase"));
+@@ -62,13 +62,13 @@ public class assertionPracticeII extends Base{
+         // First filter group: Purchase, 2 filters (values excluded in second filter)
+ 
+         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(1));
+-        amountFilter.inBetween("5", "1000");
++        amountFilter.inBetween(5, 1000);
+         amountFilter.saveFilter();
+-        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", "5", "1000"), "Failed to set amount(s) properly");
++        Assert.assertTrue(amountFilter.amountFilterSuccess("Total Spend", "between", 5, 1000), "Failed to set amount(s) properly");
+ 
+ 
+         UtilityDragger.drag(RG.state(), RG.getDropZone(1));
+-        lovFilter.toggleLOV( "Washington", "California");
++        lovFilter.toggleLOV( "State","Washington", "California");
+         lovFilter.exclude();
+         Assert.assertTrue(lovFilter.lovsExcluded(), "Exclude button not checked.");
+         lovFilter.saveFilter();
+@@ -81,20 +81,21 @@ public class assertionPracticeII extends Base{
+         Assert.assertTrue(RG.groupAdded("2", "People"));
+ 
+         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
+-        qoso.setQosoAmount(2, 1, "between", "5", "100");
++        qoso.setQosoAmount(2, 1, "between", 5, 100);
+         Assert.assertTrue(qoso.checkQosoAmount(2, 1, "between $5 and $100"), "Incorrect amount displayed");
+-        qoso.setQosoQuantity(2, 1, "at least", "2");
++        qoso.setQosoQuantity(2, 1, "at least", 2);
+         Assert.assertTrue(qoso.checkQosoQuantity(2, 1, "at least 2"), "Incorrect quantity displayed");
+         qoso.setQosoItems(2, 1, "department", "Accessories", "Clothing Accessories", "Women's", "Men's", "Ski");
++        waitThreeSeconds();
+         Assert.assertTrue(qoso.checkQosoItems(2, 1, "department", "Accessories", "Clothing Accessories", "Women's", "Men's", "Ski"));
+         qoso.setQosoTransactions(2, 1, "all");
+         Assert.assertTrue(qoso.checkQosoTransaction(2, 1, "all"));
+ 
+ 
+         UtilityDragger.drag(RG.qosoContainer(), RG.getDropZone(2));
+-        qoso.setQosoAmount(2, 2, "at most", "500");
++        qoso.setQosoAmount(2, 2, "at most", 500);
+         Assert.assertTrue(qoso.checkQosoAmount(2, 2, "at most $500"),"Incorrect amount displayed");
+-        qoso.setQosoQuantity(2, 2, "between", "2", "40");
++        qoso.setQosoQuantity(2, 2, "between", 2, 40);
+         Assert.assertTrue(qoso.checkQosoQuantity(2, 2, "between 2 and 40"), "Incorrect quantity displayed");
+         qoso.setQosoItems(2, 2, "category", "Accessories", "Accessories Misc", "Women's Shoes", "Women's Casual Shirts", "Men's Footwear", "Men's Casual Shirts", "Socks");
+         Assert.assertTrue(qoso.checkQosoItems(2, 2, "category", "Accessories", "Accessories Misc", "Women's Shoes", "Women's Casual Shirts", "Men's Footwear", "Men's Casual Shirts", "Socks"));
+@@ -103,10 +104,10 @@ public class assertionPracticeII extends Base{
+ 
+ 
+         UtilityDragger.drag(RG.ageRange(), qoso.getQOSODropZone(2, 2));
+-        lovFilter.selectAll();
++        lovFilter.selectAll("Age Range");
+         lovFilter.toggleLOV( "18-20", "21-24");
+         lovFilter.saveFilter();
+-        Assert.assertTrue(qoso.checkQosoLovNotChecked("2", "2", "Age Range","18-20", "21-24" ), "QOSO filter not set correctly");
++        Assert.assertTrue(qoso.checkQosoLovNotChecked(2, "2", "Age Range","18-20", "21-24" ), "QOSO filter not set correctly");
+ 
+         UtilityDragger.drag(RG.salesChannel(), qoso.getQOSODropZone(2, 2));
+         lovFilter.toggleLOV("Catalog");
+@@ -118,35 +119,49 @@ public class assertionPracticeII extends Base{
+         // Third filter group: Campaign. And/Or container flipped to AND, 2 filters (1 each half)
+ 
+         RG.addPurchaseGroup();
+-        Assert.assertTrue(RG.groupAdded("3", "Purchase"));
++        Assert.assertTrue(RG.groupAdded("3", "Purchase"), "Filter group not added or added in the correct position");
++        Assert.assertTrue(RG.verifyFilterGroupAndOrOperator(2, "And"), "And/Or operator not set properly");
+ 
+-        UtilityDragger.drag(RG.andOrContainer(), RG.getDropZone(3));
+ 
++        UtilityDragger.drag(RG.andOrContainer(), RG.getDropZone(3));
++        Assert.assertTrue(RG.verifyAndOrContainerOperator(3, "Or"), "Wrong operator selected or not availeble, i.e. and/or container not added properly.");
+ 
+         UtilityDragger.drag(RG.department(), RG.getBottomDropZone(3));
+-        lovFilter.selectAll();
++        lovFilter.selectAll("Department");
+         lovFilter.toggleLOV( "Camp", "Climb");
+         lovFilter.saveFilter();
++        Assert.assertTrue(lovFilter.lovNotCheckedSuccess("Department", "Camp", "Climb"), "Failed to unclick segment");
+ 
+         UtilityDragger.drag(RG.category(), RG.getTopDropZone(3));
+-        lovFilter.selectAll();
++        lovFilter.selectAll("Category");
+         lovFilter.toggleLOV( "Camp Misc", "Daypacks");
+         lovFilter.saveFilter();
++        Assert.assertTrue(lovFilter.lovNotCheckedSuccess("Category", "Camp Misc", "Daypacks"));
+ 
+-        RG.andOrButtonAnd(3).click();
++        RG.setAndOrContainerButtonAnd(3).click();
++        Assert.assertTrue(RG.verifyAndOrContainerOperator(3, "And"), "And/Or button not properly set.");
+ 
+ 
+         // Settings: All calculations on
+ 
+         RG.settingsTab();
+-        RG.toggleAgeAndGenderSetting();
+-        RG.toggleTotalSpendSetting();
+-        RG.toggleRFM();
+ 
++        Assert.assertTrue(RG.verifyAgeAndGenderNotEnabled(), "Age and Gender setting enabled, unexpectedly.");
++        RG.toggleAgeAndGenderSettingOn();
++        Assert.assertTrue(RG.verifyAgeAndGenderEnabled(), "Age and Gender setting not enabled, unexpectedly.");
++
++        Assert.assertTrue(RG.verifyTotalSpendNotEnabled(), "Total Spend setting enabled, unexpectedly.");
++        RG.toggleTotalSpendSettingOn();
++        Assert.assertTrue(RG.verifyTotalSpendEnabled(), "Total Spend setting not enabled, unexpectedly.");
++
++        Assert.assertTrue(RG.verifyRfmNotEnabled(), "RFM setting enabled, unexpectedly.");
++        RG.toggleRfmSettingOn();
++        Assert.assertTrue(RG.verifyRfmEnabled(), "RFM setting not enabled, unexpectedly.");
+ 
+         //Save Segment
+         RG.saveSegment();
+-
++        Assert.assertTrue(RG.verifySegmentSavedKnownCount("388"), "People count not matching results");
++        Assert.assertTrue(RG.verifySegmentSavedUnknownCount(), "People count does not match");
+ 
+         //View Summary and Calculation Options
+ 
+diff --git a/src/test/java/com/smartfocus/test/ui/segment_creation/TestNewSegmentPractice.java b/src/test/java/com/smartfocus/test/ui/segment_creation/TestNewSegmentPractice.java
+index 653a20e..06396a9 100644
+--- a/src/test/java/com/smartfocus/test/ui/segment_creation/TestNewSegmentPractice.java
++++ b/src/test/java/com/smartfocus/test/ui/segment_creation/TestNewSegmentPractice.java
+@@ -65,8 +65,8 @@ public class TestNewSegmentPractice extends Base {
+ 
+         }
+ 
+-        qoso.setQosoAmount(1, 2, "between", "5", "100");
+-        qoso.setQosoQuantity(1, 2, "at least", "2");
++        qoso.setQosoAmount(1, 2, "between", 5, 100);
++        qoso.setQosoQuantity(1, 2, "at least", 2);
+         qoso.setQosoItems(1, 2, "department", "Women's", "Ski");
+         qoso.setQosoTransactions(1, 2, "any");
+ 
+@@ -90,7 +90,7 @@ public class TestNewSegmentPractice extends Base {
+ 
+ 
+         UtilityDragger.drag(RG.totalSpend(), RG.getDropZone(2));
+-        amountFilter.inBetween("4", "500");
++        amountFilter.inBetween(4, 500);
+         amountFilter.saveFilter();
+ 
+         //qoso container practice
+@@ -126,8 +126,8 @@ public class TestNewSegmentPractice extends Base {
+ 
+         RG.settingsTab();
+ 
+-        RG.toggleAgeAndGenderSetting();
+-        RG.toggleRFM();
++        RG.toggleAgeAndGenderSettingOn();
++        RG.toggleRfmSettingOn();
+ 
+ 
+         //SAVE SEGMENT
+diff --git a/uiTestFramework.iml b/uiTestFramework.iml
+index 838bbd1..f7bc060 100644
+--- a/uiTestFramework.iml
++++ b/uiTestFramework.iml
+@@ -33,26 +33,29 @@
+     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.5.3" level="project" />
+     <orderEntry type="library" name="Maven: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9" level="project" />
+     <orderEntry type="library" name="Maven: javax.websocket:javax.websocket-client-api:1.0" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-java:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-api:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-chrome-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-edge-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-firefox-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-ie-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-opera-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-remote-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-safari-driver:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-support:3.7.1" level="project" />
+-    <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.7.5" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-java:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-api:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-chrome-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-edge-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-firefox-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-ie-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-opera-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-remote-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-safari-driver:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-support:3.11.0" level="project" />
++    <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.7.9" level="project" />
+     <orderEntry type="library" name="Maven: org.apache.commons:commons-exec:1.3" level="project" />
+     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
+     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.2" level="project" />
+-    <orderEntry type="library" name="Maven: com.google.guava:guava:23.0" level="project" />
++    <orderEntry type="library" name="Maven: com.google.guava:guava:23.6-jre" level="project" />
+     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:1.3.9" level="project" />
+-    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.0.18" level="project" />
++    <orderEntry type="library" name="Maven: org.checkerframework:checker-compat-qual:2.0.0" level="project" />
++    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.1.3" level="project" />
+     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.1" level="project" />
+     <orderEntry type="library" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
+     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
++    <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.9.1" level="project" />
++    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.13.0" level="project" />
+   </component>
+ </module>
+\ No newline at end of file
