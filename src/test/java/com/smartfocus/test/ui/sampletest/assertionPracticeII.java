@@ -1,10 +1,9 @@
 package com.smartfocus.test.ui.sampletest;
 
 import com.smartfocus.test.ui.Utilities.Scroll;
-import com.smartfocus.test.ui.Utilities.Settings;
+import com.smartfocus.test.ui.page_objects.Settings;
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.Utilities.UtilityDragger;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

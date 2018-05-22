@@ -1,6 +1,6 @@
 package com.smartfocus.test.ui.segment_creation;
 
-import com.smartfocus.test.ui.Utilities.Settings;
+import com.smartfocus.test.ui.page_objects.Settings;
 import com.smartfocus.test.ui.page_objects.*;
 import com.smartfocus.test.ui.Utilities.UtilityDragger;
 import org.openqa.selenium.WebElement;
