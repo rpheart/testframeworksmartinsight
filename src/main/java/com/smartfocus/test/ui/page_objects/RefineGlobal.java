@@ -948,7 +948,7 @@ public class RefineGlobal extends Base {
 
     By exportButton = By.xpath("//div[@class='btn-group segmentActionsDropDown']");
     By exportDownload = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Download\")]");
-    By exportDownloadModalButton = By.xpath("//div[@class='titleDiv' and contains(text(), 'Export')]/../div[3]/div[1]/a[2]");
+    By exportDownloadModalButton = By.xpath("//div[@class='titleDiv' and contains(text(), 'Export')]/../div[3]/div[1]/a[@class='btn do-export']");
 
     By exportEmail = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Export to Smart Email\")]");
     By exportSFTPFTP = By.xpath("//ul[@class='dropdown-menu exportDropDownMenu dropDownMenu pull-right']//*[@class='ddm-item-text exportAction' and contains(text(), \"Export To SFTP/FTP\")]");

@@ -268,6 +268,7 @@ public class Analyze extends Base {
         for (WebElement checkbox : segmentCheckboxList(segmentToSplit)) {
             checkbox.click();
         }
+        waitOneSecond();
         isDisplayedBy(splitButton, 50);
         click(splitButton);
 
