@@ -824,7 +824,7 @@ public class RefineGlobal extends Base {
         isDisplayedBy(saveButton, 5);
         click(saveButton);
         isDisplayedBy(updatingCount, 10);
-        isNotDisplayedBy(updatingCount, 150);
+        isNotDisplayedBy(updatingCount, 200);
         isDisplayedBy(countComplete, 200);
     }
 
@@ -853,12 +853,13 @@ public class RefineGlobal extends Base {
     String peopleCountTemplate = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), 'segmentName')]/../../div[4]/div[1]/span";
 
     public boolean verifySegmentSavedUnknownCount() {
+        isNotDisplayedBy(updatingCount, 200);
         isDisplayedBy(countComplete, 240);
         waitOneSecond();
         String peopleCountText = find(countComplete).getText();
         System.out.println(peopleCountText);
         summaryTab();
-        isDisplayedBy(summarySegmentTotalPeople, 60);
+        isDisplayedBy(summarySegmentTotalPeople, 240);
         String segmentTotalPeopleText = find(summarySegmentTotalPeople).getText();
         System.out.println(segmentTotalPeopleText);
         if ( peopleCountText.contains(segmentTotalPeopleText) ) {

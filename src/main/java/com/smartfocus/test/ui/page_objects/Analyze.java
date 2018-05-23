@@ -260,14 +260,15 @@ public class Analyze extends Base {
 
     public void splitSegmentTwo(String segmentToSplit, int... splitPercentages) {
     //ArrayList<Integer> percentageTextBoxes = new ArrayList<Integer>();
-
+        waitFiveSeconds();
+        waitFiveSeconds();
         isDisplayedBy(unSelectAll, 10);
         click(unSelectAll);
 
         for (WebElement checkbox : segmentCheckboxList(segmentToSplit)) {
             checkbox.click();
         }
-        isDisplayedBy(splitButton, 10);
+        isDisplayedBy(splitButton, 50);
         click(splitButton);
 
         waitOneSecond();
@@ -290,6 +291,8 @@ public class Analyze extends Base {
 //This is used for clones and splits, mainly.
 
     String segmentPattern = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), 'segmentName')]";
+    String peopleCountTemplate = "//div[@class='ui-widget-content slick-row odd' or @class='ui-widget-content slick-row even']//*[contains(text(), 'segmentName')]/../../div[4]/div[1]/span";
+
 
     public boolean verifySegmentPresent (String segmentName) {
 /*        driver.navigate().refresh();
@@ -308,6 +311,11 @@ public class Analyze extends Base {
         catch (Exception e) {
             //ignoring exception
         }
+
+        By peopleCountElement = By.xpath(peopleCountTemplate.replace("segmentName", segmentName));
+        isDisplayedBy(peopleCountElement, 240);
+        System.out.println(find(peopleCountElement).getText());
+
 
         if ( isDisplayedBy(segmentToVerify, 60) ) {
             return true;
