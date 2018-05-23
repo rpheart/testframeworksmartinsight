@@ -314,7 +314,7 @@ public class Analyze extends Base {
         }
 
         By peopleCountElement = By.xpath(peopleCountTemplate.replace("segmentName", segmentName));
-        isDisplayedBy(peopleCountElement, 240);
+        isDisplayedBy(peopleCountElement, 360);
         System.out.println(find(peopleCountElement).getText());
 
 
