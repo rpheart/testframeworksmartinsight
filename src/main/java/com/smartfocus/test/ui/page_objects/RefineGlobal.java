@@ -1,5 +1,6 @@
 package com.smartfocus.test.ui.page_objects;
 
+import com.smartfocus.test.ui.Utilities.Scroll;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,6 +11,9 @@ import java.util.List;
 
 
 public class RefineGlobal extends Base {
+
+
+    Scroll scroll = new Scroll();
 
     // Add filter group dropdown elements
     By addGroup = By.cssSelector(".create-time-period-text");
@@ -122,7 +126,9 @@ public class RefineGlobal extends Base {
     String appliedGroupText;
 
 
+
     public WebElement addPurchaseGroup() {
+        scroll.scrollToTopofFilterGroupContainer();
         isDisplayedBy(addGroup, 5);
         click(addGroup);
         isDisplayedBy(addPurchaseGroup, 5);
@@ -135,6 +141,7 @@ public class RefineGlobal extends Base {
     }
 
     public WebElement addCampaignGroup() {
+        scroll.scrollToTopofFilterGroupContainer();
         isDisplayedBy(addGroup, 5);
         click(addGroup);
         isDisplayedBy(addCampaignGroup, 5);
@@ -147,6 +154,7 @@ public class RefineGlobal extends Base {
     }
 
     public WebElement addPeopleGroup() {
+        scroll.scrollToTopofFilterGroupContainer();
         isDisplayedBy(addGroup, 5);
         click(addGroup);
         isDisplayedBy(addPeopleGroup, 5);

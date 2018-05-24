@@ -45,6 +45,15 @@ public class Scroll extends Base {
                 container);
     }
 
+    By filterGroupContainer = By.xpath("//div[@class='tab-container-inner-wrapper']");
+
+    public void scrollToTopofFilterGroupContainer() {
+        WebElement container = find(filterGroupContainer);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollTop=arguments[0].offsetTop",
+                container);
+    }
+
 
     public void scrollToElement (WebElement element) {
         Actions actions = new Actions(driver);
