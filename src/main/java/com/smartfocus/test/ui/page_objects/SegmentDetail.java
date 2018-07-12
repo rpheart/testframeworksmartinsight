@@ -23,7 +23,7 @@ public class SegmentDetail extends Base {
     By summaryGraphic = By.xpath("//div[@class='refineSummaryDetail active item' or @class='refineSummaryDetail item' or @class='refineSummaryDetail item active']/div[1]/div[1]/div[1]/div[2]");
 
     public void renderSummaryTab() {
-        isDisplayedBy(summaryChartTab, 10);
+        isDisplayedBy(summaryChartTab, 60);
         click(summaryChartTab);
     }
 
