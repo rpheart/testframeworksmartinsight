@@ -14,7 +14,7 @@ public class Logins extends Base{
     }
 
     public void passwordSidevall(){
-        type(password, "HeadCheese!5");
+        type(password, "HeadCheese!6");
     }
 
     public void usernameSitest01_all(){
